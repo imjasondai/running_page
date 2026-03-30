@@ -75,6 +75,7 @@ const RunMap = ({
     useState<FeatureCollection<RPGeometry> | null>(null);
   const [isLoadingMapData, setIsLoadingMapData] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
+  const languageControlAddedRef = useRef(false);
 
   // Use the map theme hook to get the current map theme
   const currentMapTheme = useMapTheme();
@@ -221,34 +222,45 @@ const RunMap = ({
     });
   }
 
+  const refreshMapDisplay = useCallback(
+    (map: MapInstance) => {
+      try {
+        map.resize();
+        switchLayerVisibility(map, lights);
+        map.triggerRepaint();
+      } catch (error) {
+        console.warn('Error refreshing map display:', error);
+      }
+    },
+    [lights]
+  );
+
   // Apply layer visibility when lights setting changes
   useEffect(() => {
     if (mapRef.current) {
       const map = mapRef.current.getMap();
       // Add a small delay to ensure map is ready
       setTimeout(() => {
-        try {
-          switchLayerVisibility(map, lights);
-        } catch (error) {
-          console.warn('Error switching layer visibility:', error);
-        }
+        refreshMapDisplay(map);
       }, 50);
     }
-  }, [lights]);
+  }, [lights, refreshMapDisplay]);
 
   const mapRefCallback = useCallback(
     (ref: MapRef) => {
       if (ref !== null) {
         const map = ref.getMap();
-        if (map && IS_CHINESE) {
+        mapRef.current = ref;
+        if (map && IS_CHINESE && !languageControlAddedRef.current) {
           map.addControl(new MapboxLanguage({ defaultLanguage: 'zh-Hans' }));
+          languageControlAddedRef.current = true;
         }
         // all style resources have been downloaded
         // and the first visually complete rendering of the base style has occurred.
         // it's odd. when use style other than mapbox, the style.load event is not triggered.Add commentMore actions
         // so I use data event instead of style.load event and make sure we handle it only once.
         map.on('data', (event) => {
-          if (event.dataType !== 'style' || mapRef.current) {
+          if (event.dataType !== 'style') {
             return;
           }
           if (!ROAD_LABEL_DISPLAY) {
@@ -264,16 +276,15 @@ const RunMap = ({
               map.removeLayer(layerId);
             });
           }
-          mapRef.current = ref;
-          switchLayerVisibility(map, lights);
+          setTimeout(() => refreshMapDisplay(map), 100);
         });
       }
       if (mapRef.current) {
         const map = mapRef.current.getMap();
-        switchLayerVisibility(map, lights);
+        refreshMapDisplay(map);
       }
     },
-    [mapRef, lights]
+    [lights, refreshMapDisplay]
   );
 
   const initGeoDataLength = geoData.features.length;
@@ -424,6 +435,12 @@ const RunMap = ({
       {...viewState}
       onMove={onMove}
       onClick={handleMapClick}
+      onLoad={() => {
+        if (mapRef.current) {
+          const map = mapRef.current.getMap();
+          setTimeout(() => refreshMapDisplay(map), 100);
+        }
+      }}
       style={style}
       mapStyle={mapStyle}
       ref={mapRefCallback}
