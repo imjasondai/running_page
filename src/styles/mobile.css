@@ -31,6 +31,10 @@
     font-size: 2.5rem !important;
   }
 
+  .text-6xl {
+    font-size: 3rem !important;
+  }
+
   /* Optimize margin for mobile */
   .my-12 {
     margin-top: 2rem !important;
@@ -47,7 +51,7 @@
   /* For very small screens, make table even more compact */
   .runTable {
     min-width: 550px !important;
-    font-size: 0.75rem !important;
+    font-size: 0.85rem !important;
   }
 
   .runTable th,

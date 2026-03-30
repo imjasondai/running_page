@@ -28,15 +28,15 @@
   cursor: pointer;
   padding: 0.5rem 0.4rem;
   margin-top: 0.1rem;
-  font-size: 1rem;
+  font-size: 1.1rem;
   text-align: center;
   color: var(--color-run-date);
 }
 
 @media only screen and (max-width: 768px) {
-  .button {
+.button {
     padding: 0.8rem 0.3rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 }
 
@@ -52,13 +52,14 @@
   left: 120px;
   cursor: pointer;
   color: var(--color-primary);
+  font-size: 1.05rem;
 }
 
 @media only screen and (max-width: 768px) {
-  .runTitle {
+.runTitle {
     width: calc(100% - 40px);
     left: 20px;
-    font-size: 0.8rem;
+    font-size: 0.95rem;
     bottom: 5px;
   }
 }
@@ -104,7 +105,7 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .mapErrorNotification button,
