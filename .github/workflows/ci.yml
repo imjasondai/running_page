@@ -51,13 +51,14 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
+          package-manager-cache: false
+
+      - name: Install pnpm
+        run: npm install -g pnpm@8.9.0
 
       - name: Install dependencies
         run: pnpm install
