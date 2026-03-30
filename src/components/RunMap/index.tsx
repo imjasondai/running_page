@@ -236,16 +236,35 @@ const RunMap = ({
     [lights]
   );
 
+  const ensureMapDisplay = useCallback(
+    (map: MapInstance) => {
+      let attempts = 0;
+      const maxAttempts = 6;
+
+      const apply = () => {
+        attempts += 1;
+        refreshMapDisplay(map);
+
+        if (attempts < maxAttempts) {
+          setTimeout(apply, 250);
+        }
+      };
+
+      apply();
+    },
+    [refreshMapDisplay]
+  );
+
   // Apply layer visibility when lights setting changes
   useEffect(() => {
     if (mapRef.current) {
       const map = mapRef.current.getMap();
       // Add a small delay to ensure map is ready
       setTimeout(() => {
-        refreshMapDisplay(map);
+        ensureMapDisplay(map);
       }, 50);
     }
-  }, [lights, refreshMapDisplay]);
+  }, [lights, ensureMapDisplay]);
 
   const mapRefCallback = useCallback(
     (ref: MapRef) => {
@@ -277,15 +296,15 @@ const RunMap = ({
               map.removeLayer(layerId);
             });
           }
-          setTimeout(() => refreshMapDisplay(map), 100);
+          setTimeout(() => ensureMapDisplay(map), 100);
         });
       }
       if (mapRef.current) {
         const map = mapRef.current.getMap();
-        refreshMapDisplay(map);
+        ensureMapDisplay(map);
       }
     },
-    [lights, refreshMapDisplay]
+    [lights, ensureMapDisplay]
   );
 
   const initGeoDataLength = geoData.features.length;
@@ -447,7 +466,7 @@ const RunMap = ({
               initialStyleReappliedRef.current = true;
               map.setStyle(mapStyle);
             }
-            setTimeout(() => refreshMapDisplay(map), 150);
+            setTimeout(() => ensureMapDisplay(map), 150);
           }, 100);
         }
       }}
