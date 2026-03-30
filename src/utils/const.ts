@@ -50,20 +50,22 @@ const SHOW_ELEVATION_GAIN = true;
 // richer title for the activity types (like garmin style)
 const RICH_TITLE = false;
 
-// IF you are outside China please make sure IS_CHINESE = false
-const IS_CHINESE = true;
+// Set to false to use the English UI and labels.
+const IS_CHINESE = false;
 const USE_ANIMATION_FOR_GRID = false;
 const CHINESE_INFO_MESSAGE = (yearLength: number, year: string): string => {
   const yearStr = year === 'Total' ? '所有' : ` ${year} `;
   return `记录自己跑步 ${yearLength} 年了，下面列表展示的是${yearStr}的数据`;
 };
-const ENGLISH_INFO_MESSAGE = (yearLength: number, year: string): string =>
-  `Running Journey with ${yearLength} Years, the table shows year ${year} data`;
+const ENGLISH_INFO_MESSAGE = (yearLength: number, year: string): string => {
+  const yearStr = year === 'Total' ? 'all years' : year;
+  return `Running journey across ${yearLength} years. The table below shows data for ${yearStr}.`;
+};
 
-// English is not supported for location info messages yet
 const CHINESE_LOCATION_INFO_MESSAGE_FIRST =
-  '跑过了一些地方，希望随着时间推移，点亮的地方越来越多';
-const CHINESE_LOCATION_INFO_MESSAGE_SECOND = '不要停下来，不要停下奔跑的脚步';
+  'I have run through a few places, and I hope this map keeps lighting up over time';
+const CHINESE_LOCATION_INFO_MESSAGE_SECOND =
+  'Keep moving forward and keep running';
 
 const INFO_MESSAGE = IS_CHINESE ? CHINESE_INFO_MESSAGE : ENGLISH_INFO_MESSAGE;
 const FULL_MARATHON_RUN_TITLE = IS_CHINESE ? '全程马拉松' : 'Full Marathon';
@@ -93,10 +95,10 @@ const TOTAL_ELEVATION_GAIN_TITLE = IS_CHINESE
   ? '总海拔爬升'
   : 'Total Elevation Gain';
 const AVERAGE_HEART_RATE_TITLE = IS_CHINESE ? '平均心率' : 'Average Heart Rate';
-const YEARLY_TITLE = IS_CHINESE ? 'Year' : 'Yearly';
-const MONTHLY_TITLE = IS_CHINESE ? 'Month' : 'Monthly';
-const WEEKLY_TITLE = IS_CHINESE ? 'Week' : 'Weekly';
-const DAILY_TITLE = IS_CHINESE ? 'Day' : 'Daily';
+const YEARLY_TITLE = IS_CHINESE ? 'Year' : 'Year';
+const MONTHLY_TITLE = IS_CHINESE ? 'Month' : 'Month';
+const WEEKLY_TITLE = IS_CHINESE ? 'Week' : 'Week';
+const DAILY_TITLE = IS_CHINESE ? 'Day' : 'Day';
 const LOCATION_TITLE = IS_CHINESE ? 'Location' : 'Location';
 const HOME_PAGE_TITLE = IS_CHINESE ? '首页' : 'Home';
 
