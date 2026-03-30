@@ -76,6 +76,7 @@ const RunMap = ({
   const [isLoadingMapData, setIsLoadingMapData] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
   const languageControlAddedRef = useRef(false);
+  const initialStyleReappliedRef = useRef(false);
 
   // Use the map theme hook to get the current map theme
   const currentMapTheme = useMapTheme();
@@ -438,7 +439,16 @@ const RunMap = ({
       onLoad={() => {
         if (mapRef.current) {
           const map = mapRef.current.getMap();
-          setTimeout(() => refreshMapDisplay(map), 100);
+          setTimeout(() => {
+            // Re-apply the current style once after initial load.
+            // This mirrors the manual light/dark toggle workaround that fixes
+            // missing basemap layers on first dark-theme render.
+            if (!initialStyleReappliedRef.current) {
+              initialStyleReappliedRef.current = true;
+              map.setStyle(mapStyle);
+            }
+            setTimeout(() => refreshMapDisplay(map), 150);
+          }, 100);
         }
       }}
       style={style}
