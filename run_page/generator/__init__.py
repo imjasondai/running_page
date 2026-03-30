@@ -63,9 +63,19 @@ class Generator:
             else:
                 filters = {"before": datetime.datetime.now(datetime.timezone.utc)}
 
+        print(f"Using filters: {filters}")
+        processed_count = 0
+        created_count = 0
+        updated_count = 0
         for activity in self.client.get_activities(**filters):
             if self.only_run and activity.type != "Run":
                 continue
+            processed_count += 1
+            if processed_count == 1 or processed_count % 25 == 0:
+                print(
+                    f"Processing activity #{processed_count}: "
+                    f"id={activity.id} type={activity.type} name={activity.name}"
+                )
             if IGNORE_BEFORE_SAVING:
                 if activity.map and activity.map.summary_polyline:
                     activity.map.summary_polyline = filter_out(
@@ -76,11 +86,18 @@ class Generator:
             activity.subtype = activity.type
             created = update_or_create_activity(self.session, activity)
             if created:
+                created_count += 1
                 sys.stdout.write("+")
             else:
+                updated_count += 1
                 sys.stdout.write(".")
             sys.stdout.flush()
         self.session.commit()
+        print("")
+        print(
+            f"Sync complete. processed={processed_count}, "
+            f"created={created_count}, updated={updated_count}"
+        )
 
     def sync_from_data_dir(self, data_dir, file_suffix="gpx", activity_title_dict={}):
         loader = track_loader.TrackLoader()

@@ -107,6 +107,13 @@ curl -X POST https://www.strava.com/oauth/token \
 
 这 3 个是你跑通 Strava 同步的最小必要项。
 
+首次同步建议保留工作流里的这两个默认值：
+
+- `DISABLE_REVERSE_GEOCODE: true`
+- `REVERSE_GEOCODE_TIMEOUT: 3`
+
+这样可以避免第一次全量导入时卡在地点反查。等你确认同步稳定后，如果你确实想补全地点文本信息，再把 `DISABLE_REVERSE_GEOCODE` 改回 `false`。
+
 ### 页面站点信息
 
 文件：
