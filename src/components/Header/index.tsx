@@ -72,11 +72,7 @@ const Header = () => {
         </div>
         <div className="flex w-3/4 items-center justify-end text-right">
           {navLinks.map((n, i) => (
-            <a
-              key={i}
-              href={n.url}
-              className="mr-3 text-xl lg:text-lg lg:mr-4"
-            >
+            <a key={i} href={n.url} className="mr-3 text-xl lg:mr-4 lg:text-lg">
               {n.name}
             </a>
           ))}
