@@ -41,10 +41,10 @@ const MAP_HEIGHT = window.innerWidth <= 768 ? 250 : 600;
 const ROAD_LABEL_DISPLAY = true;
 // For public repositories, default to privacy mode to avoid exposing full route details.
 // Set to `false` if you want to render the detailed map tiles and route context publicly.
-const PRIVACY_MODE = true;
+const PRIVACY_MODE = false;
 // updated on 2024/11/17: lights are turned off by default
 //set to `false` if you want to make light off as default, only effect when `PRIVACY_MODE` = false
-const LIGHTS_ON = false;
+const LIGHTS_ON = true;
 //set to `true` if you want to show the 'Elevation Gain' column
 const SHOW_ELEVATION_GAIN = true;
 // richer title for the activity types (like garmin style)
