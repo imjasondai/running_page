@@ -15,10 +15,10 @@ const getBasePath = () => {
 };
 
 const data: ISiteMetadataResult = {
-  siteTitle: 'imjasondai Running',
+  siteTitle: "JasonD's Running",
   siteUrl: 'https://imjasondai.github.io/running_page',
   logo: 'https://github.com/imjasondai.png',
-  description: 'Personal running page powered by Strava',
+  description: "JasonD's personal running page powered by Strava",
   navLinks: [
     {
       name: 'Summary',
