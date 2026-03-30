@@ -34,7 +34,7 @@
 }
 
 @media only screen and (max-width: 768px) {
-.button {
+  .button {
     padding: 0.8rem 0.3rem;
     font-size: 1rem;
   }
@@ -56,7 +56,7 @@
 }
 
 @media only screen and (max-width: 768px) {
-.runTitle {
+  .runTitle {
     width: calc(100% - 40px);
     left: 20px;
     font-size: 0.95rem;
