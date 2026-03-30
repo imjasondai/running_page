@@ -53,10 +53,6 @@ const RICH_TITLE = false;
 // Set to false to use the English UI and labels.
 const IS_CHINESE = false;
 const USE_ANIMATION_FOR_GRID = false;
-const CHINESE_INFO_MESSAGE = (yearLength: number, year: string): string => {
-  const yearStr = year === 'Total' ? '所有' : ` ${year} `;
-  return `记录自己跑步 ${yearLength} 年了，下面列表展示的是${yearStr}的数据`;
-};
 const ENGLISH_INFO_MESSAGE = (yearLength: number, year: string): string => {
   const yearStr = year === 'Total' ? 'all years' : year;
   return `Running journey across ${yearLength} years. The table below shows data for ${yearStr}.`;
@@ -67,7 +63,7 @@ const CHINESE_LOCATION_INFO_MESSAGE_FIRST =
 const CHINESE_LOCATION_INFO_MESSAGE_SECOND =
   'Keep moving forward and keep running';
 
-const INFO_MESSAGE = IS_CHINESE ? CHINESE_INFO_MESSAGE : ENGLISH_INFO_MESSAGE;
+const INFO_MESSAGE = ENGLISH_INFO_MESSAGE;
 const FULL_MARATHON_RUN_TITLE = IS_CHINESE ? '全程马拉松' : 'Full Marathon';
 const HALF_MARATHON_RUN_TITLE = IS_CHINESE ? '半程马拉松' : 'Half Marathon';
 const MORNING_RUN_TITLE = IS_CHINESE ? '清晨跑步' : 'Morning Run';
