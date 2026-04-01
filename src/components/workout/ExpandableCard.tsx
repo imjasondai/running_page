@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { IS_CHINESE } from './WorkoutUI';
 
 interface Props {
-  children: React.ReactNode;
+  children: ReactNode;
   title?: string;
   className?: string;
 }

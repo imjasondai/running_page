@@ -27,14 +27,12 @@ const NeonPRWall = ({ workouts }: { workouts: WorkoutSession[] }) => {
     weight,
     reps,
     e1rm,
-    date,
     i,
   }: {
     name: string;
     weight: number;
     reps: number;
     e1rm: number;
-    date: string;
     i: number;
   }) => {
     const neon = NEON_PALETTE[i % NEON_PALETTE.length];

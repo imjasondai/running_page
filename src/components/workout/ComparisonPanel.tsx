@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type CSSProperties } from 'react';
 import {
   BarChart,
   Bar,
@@ -14,7 +14,7 @@ import { toLocalDate } from '@/utils/workoutCalcs';
 
 type Period = 'month' | 'year' | 'quarter';
 
-const TOOLTIP_STYLE: React.CSSProperties = {
+const TOOLTIP_STYLE: CSSProperties = {
   background: 'var(--wo-card-bg)',
   border: '1px solid var(--wo-card-border)',
   borderRadius: 10,

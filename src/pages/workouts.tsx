@@ -1,4 +1,10 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  type ReactNode,
+} from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
   BarChart,
@@ -1877,7 +1883,7 @@ const MuscleBodyMap = ({ workouts }: { workouts: WorkoutSession[] }) => {
       children,
     }: {
       muscle: string;
-      children: React.ReactNode;
+      children: ReactNode;
     }) => {
       const r = ratio(muscle);
       const label = IS_CHINESE ? MUSCLE_LABELS_CN[muscle] ?? muscle : muscle;
@@ -2804,7 +2810,9 @@ const WorkoutsPage = () => {
   useEffect(() => {
     try {
       localStorage.setItem('wo-section-collapsed', JSON.stringify(collapsed));
-    } catch {}
+    } catch {
+      // Ignore persistence failures, e.g. private mode or storage restrictions.
+    }
   }, [collapsed]);
   const toggleSection = useCallback((key: string) => {
     setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));

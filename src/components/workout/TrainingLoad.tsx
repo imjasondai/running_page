@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type CSSProperties } from 'react';
 import {
   ComposedChart,
   Area,
@@ -15,7 +15,7 @@ import { WorkoutSession } from '@/types/workout';
 import { toLocalDate } from '@/utils/workoutCalcs';
 import { IS_CHINESE } from './WorkoutUI';
 
-const TOOLTIP_STYLE: React.CSSProperties = {
+const TOOLTIP_STYLE: CSSProperties = {
   background: 'var(--wo-card-bg)',
   border: '1px solid var(--wo-card-border)',
   borderRadius: 10,

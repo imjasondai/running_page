@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, type CSSProperties } from 'react';
 import {
   LineChart,
   Line,
@@ -29,7 +29,7 @@ const LINE_COLORS = [
   'var(--wo-series-8)',
 ];
 
-const TOOLTIP_STYLE: React.CSSProperties = {
+const TOOLTIP_STYLE: CSSProperties = {
   background: 'var(--wo-card-bg)',
   border: '1px solid var(--wo-card-border)',
   borderRadius: 10,
