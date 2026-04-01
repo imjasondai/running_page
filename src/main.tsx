@@ -13,6 +13,7 @@ import '@/styles/index.css';
 import { withOptionalGAPageTracking } from './utils/trackRoute';
 import HomePage from '@/pages/total';
 import WorkoutsPage from '@/pages/workouts';
+import RunningLifePage from '@/pages/running-life';
 
 if (USE_GOOGLE_ANALYTICS) {
   ReactGA.initialize(GOOGLE_ANALYTICS_TRACKING_ID);
@@ -31,6 +32,10 @@ const routes = createBrowserRouter(
     {
       path: 'workouts',
       element: withOptionalGAPageTracking(<WorkoutsPage />),
+    },
+    {
+      path: 'running-life',
+      element: withOptionalGAPageTracking(<RunningLifePage />),
     },
     {
       path: '*',

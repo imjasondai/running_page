@@ -29,6 +29,10 @@ const data: ISiteMetadataResult = {
       url: `${getBasePath()}/workouts`,
     },
     {
+      name: 'Running Life',
+      url: `${getBasePath()}/running-life`,
+    },
+    {
       name: 'GitHub',
       url: 'https://github.com/imjasondai/running_page',
     },
