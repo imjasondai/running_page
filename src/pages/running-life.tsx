@@ -22,7 +22,6 @@ type MonthDetail = {
 };
 
 const BIRTH_DATE = new Date(1989, 0, 13);
-const LIFE_EXPECTANCY_YEARS = 86;
 const GRID_COLS = 24;
 const GRID_ROWS = 43;
 const GRID_TOTAL = GRID_COLS * GRID_ROWS;
@@ -194,6 +193,7 @@ const RunningLifePage = () => {
   };
 
   const gridWidth = GRID_COLS * CELL_SIZE + (GRID_COLS - 1) * CELL_GAP;
+  const gridHeight = GRID_ROWS * CELL_SIZE + (GRID_ROWS - 1) * CELL_GAP;
 
   return (
     <>
@@ -203,25 +203,6 @@ const RunningLifePage = () => {
 
       <div className="min-h-screen bg-zinc-950 px-4 py-10 text-white md:px-8 md:py-14">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
-          <div className="mb-10 text-center">
-            <h1 className="text-4xl font-black uppercase tracking-tight text-white md:text-6xl md:italic">
-              Running
-              <span className="text-red-600">.Life</span>
-            </h1>
-            <p className="mt-3 font-mono text-sm text-zinc-400">
-              {currentLifeMonth}/{GRID_TOTAL} months
-              <span className="mx-2 text-zinc-600">·</span>
-              {progress}%
-            </p>
-            <p className="mt-3 max-w-2xl text-sm text-zinc-500">
-              Born on 1989-01-13. This grid spans {LIFE_EXPECTANCY_YEARS} years
-              of life, or {GRID_TOTAL} months. Today is in your{' '}
-              {currentLifeMonth}
-              th life month, and running data starts from your first recorded
-              run, so earlier life months stay dark by design.
-            </p>
-          </div>
-
           <div className="mb-8 flex flex-wrap items-center justify-center gap-4 rounded-full border border-white/10 bg-black/30 px-5 py-3 backdrop-blur-sm">
             {[
               { label: '< 100 km', color: COLORS.level1 },
@@ -243,29 +224,54 @@ const RunningLifePage = () => {
 
           <div className="w-full overflow-x-auto pb-6">
             <div
-              className="mx-auto grid"
+              className="relative mx-auto"
               style={{
                 width: `${gridWidth}px`,
-                gridTemplateColumns: `repeat(${GRID_COLS}, ${CELL_SIZE}px)`,
-                gap: `${CELL_GAP}px`,
+                height: `${gridHeight}px`,
               }}
             >
-              {months.map((month) => (
-                <button
-                  key={month.id}
-                  type="button"
-                  onClick={() => handleMonthClick(month)}
-                  className="transition-transform duration-200 hover:scale-110 hover:ring-2 hover:ring-white/40 disabled:cursor-default disabled:hover:scale-100 disabled:hover:ring-0"
-                  disabled={month.future || month.distanceKm <= 0}
-                  title={`${month.year}-${String(month.month).padStart(2, '0')}: ${month.distanceKm.toFixed(1)} km`}
-                  style={{
-                    width: `${CELL_SIZE}px`,
-                    height: `${CELL_SIZE}px`,
-                    borderRadius: `${CELL_RADIUS}px`,
-                    backgroundColor: month.color,
-                  }}
-                />
-              ))}
+              <div
+                className="pointer-events-none absolute left-0 z-10 flex w-full flex-col items-center px-4 text-center"
+                style={{
+                  top: `${Math.round(gridHeight * 0.25)}px`,
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                <h1 className="text-4xl font-black uppercase tracking-tight text-white drop-shadow-lg md:text-6xl md:italic">
+                  Running
+                  <span className="text-red-600">.Life</span>
+                </h1>
+                <p className="mt-3 font-mono text-sm text-zinc-300 drop-shadow-md">
+                  {currentLifeMonth}/{GRID_TOTAL} months
+                  <span className="mx-2 text-zinc-500">·</span>
+                  {progress}%
+                </p>
+              </div>
+
+              <div
+                className="grid"
+                style={{
+                  gridTemplateColumns: `repeat(${GRID_COLS}, ${CELL_SIZE}px)`,
+                  gap: `${CELL_GAP}px`,
+                }}
+              >
+                {months.map((month) => (
+                  <button
+                    key={month.id}
+                    type="button"
+                    onClick={() => handleMonthClick(month)}
+                    className="transition-transform duration-200 hover:scale-110 hover:ring-2 hover:ring-white/40 disabled:cursor-default disabled:hover:scale-100 disabled:hover:ring-0"
+                    disabled={month.future || month.distanceKm <= 0}
+                    title={`${month.year}-${String(month.month).padStart(2, '0')}: ${month.distanceKm.toFixed(1)} km`}
+                    style={{
+                      width: `${CELL_SIZE}px`,
+                      height: `${CELL_SIZE}px`,
+                      borderRadius: `${CELL_RADIUS}px`,
+                      backgroundColor: month.color,
+                    }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
