@@ -21,9 +21,9 @@ export const getMapThemeFromCurrentTheme = (theme: Theme): string => {
  * @returns The current map theme style
  */
 export const useMapTheme = () => {
-  // Initialize map theme based on current settings, default to light
+  // Initialize map theme based on current settings, default to dark
   const [mapTheme, setMapTheme] = useState(() => {
-    if (typeof window === 'undefined') return MAP_TILE_STYLE_LIGHT;
+    if (typeof window === 'undefined') return MAP_TILE_STYLE_DARK;
 
     // Check for explicit theme in DOM
     const dataTheme = document.documentElement.getAttribute('data-theme');
@@ -35,8 +35,8 @@ export const useMapTheme = () => {
     if (savedTheme === 'dark') return MAP_TILE_STYLE_DARK;
     if (savedTheme === 'light') return MAP_TILE_STYLE_LIGHT;
 
-    // Default to light theme
-    return MAP_TILE_STYLE_LIGHT;
+    // Default to dark theme
+    return MAP_TILE_STYLE_DARK;
   });
 
   /**
@@ -53,7 +53,7 @@ export const useMapTheme = () => {
     // Determine the correct theme based on priority:
     // 1. Explicit DOM attribute
     // 2. localStorage setting
-    // 3. Default to light theme
+    // 3. Default to dark theme
     if (dataTheme === 'dark') {
       newTheme = MAP_TILE_STYLE_DARK;
     } else if (dataTheme === 'light') {
@@ -63,8 +63,8 @@ export const useMapTheme = () => {
     } else if (!dataTheme && savedTheme === 'light') {
       newTheme = MAP_TILE_STYLE_LIGHT;
     } else {
-      // Default to light theme
-      newTheme = MAP_TILE_STYLE_LIGHT;
+      // Default to dark theme
+      newTheme = MAP_TILE_STYLE_DARK;
     }
 
     // Only update if theme has changed
@@ -122,10 +122,10 @@ export const useMapTheme = () => {
  * @returns Object with current theme and function to change theme
  */
 export const useTheme = () => {
-  // Initialize theme from localStorage or default to light
+  // Initialize theme from localStorage or default to dark
   const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return 'light';
-    return (localStorage.getItem('theme') as Theme) || 'light';
+    if (typeof window === 'undefined') return 'dark';
+    return (localStorage.getItem('theme') as Theme) || 'dark';
   });
 
   /**
