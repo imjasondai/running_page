@@ -21,8 +21,10 @@ type MonthDetail = {
   avgPaceLabel: string;
 };
 
+const BIRTH_DATE = new Date(1989, 0, 13);
+const LIFE_EXPECTANCY_YEARS = 86;
 const GRID_COLS = 24;
-const GRID_ROWS = 18;
+const GRID_ROWS = 43;
 const GRID_TOTAL = GRID_COLS * GRID_ROWS;
 const CELL_SIZE = 14;
 const CELL_GAP = 8;
@@ -39,6 +41,18 @@ const COLORS = {
 
 const formatDateKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+const getFullMonthsElapsed = (start: Date, end: Date) => {
+  let months =
+    (end.getFullYear() - start.getFullYear()) * 12 +
+    (end.getMonth() - start.getMonth());
+
+  if (end.getDate() < start.getDate()) {
+    months -= 1;
+  }
+
+  return Math.max(0, months);
+};
 
 const parseDurationSeconds = (value: string) => {
   const [hours, minutes, seconds] = value.split(':').map(Number);
@@ -70,7 +84,7 @@ const RunningLifePage = () => {
   const { activities } = useActivities();
   const [selectedMonth, setSelectedMonth] = useState<MonthDetail | null>(null);
 
-  const runStartDate = useMemo(() => {
+  const firstRunMonth = useMemo(() => {
     if (activities.length === 0) {
       return new Date();
     }
@@ -82,10 +96,17 @@ const RunningLifePage = () => {
     return new Date(first.getFullYear(), first.getMonth(), 1);
   }, [activities]);
 
+  const lifeStartMonth = useMemo(
+    () => new Date(BIRTH_DATE.getFullYear(), BIRTH_DATE.getMonth(), 1),
+    []
+  );
+
   const currentMonth = useMemo(() => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
   }, []);
+
+  const today = useMemo(() => new Date(), []);
 
   const monthlyStats = useMemo(() => {
     const map: Record<
@@ -108,20 +129,17 @@ const RunningLifePage = () => {
     return map;
   }, [activities]);
 
-  const completedMonths = useMemo(() => {
-    return Math.max(
-      0,
-      (currentMonth.getFullYear() - runStartDate.getFullYear()) * 12 +
-        (currentMonth.getMonth() - runStartDate.getMonth()) +
-        1
-    );
-  }, [currentMonth, runStartDate]);
+  const completedLifeMonths = useMemo(
+    () => getFullMonthsElapsed(BIRTH_DATE, today),
+    [today]
+  );
 
-  const progress = ((completedMonths / GRID_TOTAL) * 100).toFixed(1);
+  const currentLifeMonth = completedLifeMonths + 1;
+  const progress = ((completedLifeMonths / GRID_TOTAL) * 100).toFixed(1);
 
   const months = useMemo<LifeMonth[]>(() => {
     const result: LifeMonth[] = [];
-    const cursor = new Date(runStartDate);
+    const cursor = new Date(lifeStartMonth);
 
     for (let index = 0; index < GRID_TOTAL; index += 1) {
       const year = cursor.getFullYear();
@@ -134,6 +152,8 @@ const RunningLifePage = () => {
       let color = COLORS.noData;
       if (future) {
         color = COLORS.future;
+      } else if (cursor < firstRunMonth) {
+        color = COLORS.noData;
       } else if (distanceKm > 0) {
         if (distanceKm < 100) color = COLORS.level1;
         else if (distanceKm < 200) color = COLORS.level2;
@@ -155,7 +175,7 @@ const RunningLifePage = () => {
     }
 
     return result;
-  }, [currentMonth, monthlyStats, runStartDate]);
+  }, [currentMonth, firstRunMonth, lifeStartMonth, monthlyStats]);
 
   const handleMonthClick = (month: LifeMonth) => {
     if (month.future || month.distanceKm <= 0) return;
@@ -189,13 +209,16 @@ const RunningLifePage = () => {
               <span className="text-red-600">.Life</span>
             </h1>
             <p className="mt-3 font-mono text-sm text-zinc-400">
-              {completedMonths}/{GRID_TOTAL} months
+              {completedLifeMonths}/{GRID_TOTAL} completed months
+              <span className="mx-2 text-zinc-600">·</span>
+              month {currentLifeMonth} in progress
               <span className="mx-2 text-zinc-600">·</span>
               {progress}%
             </p>
             <p className="mt-3 max-w-2xl text-sm text-zinc-500">
-              Monthly running history since your first recorded run. Click a
-              month to view summary details.
+              Born on 1989-01-13. This grid spans {LIFE_EXPECTANCY_YEARS} years
+              of life, or {GRID_TOTAL} months. Running data starts from your
+              first recorded run, so earlier life months stay dark by design.
             </p>
           </div>
 
