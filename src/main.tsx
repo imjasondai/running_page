@@ -28,6 +28,10 @@ const routes = createBrowserRouter(
       element: withOptionalGAPageTracking(<HomePage />),
     },
     {
+      path: 'workouts',
+      element: withOptionalGAPageTracking(<HomePage />),
+    },
+    {
       path: '*',
       element: withOptionalGAPageTracking(<NotFound />),
     },
