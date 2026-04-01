@@ -21,6 +21,10 @@ const data: ISiteMetadataResult = {
   description: 'DvorakD personal running page powered by Strava',
   navLinks: [
     {
+      name: 'Running Page',
+      url: `${getBasePath()}/`,
+    },
+    {
       name: 'Workouts',
       url: `${getBasePath()}/workouts`,
     },
