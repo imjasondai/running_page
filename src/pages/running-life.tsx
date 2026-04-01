@@ -199,11 +199,52 @@ const RunningLifePage = () => {
     <>
       <Helmet>
         <title>Running Life</title>
+        <style>{`
+          @keyframes runningLifeFadeSlide {
+            from {
+              opacity: 0;
+              transform: translateY(18px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes runningLifeScaleIn {
+            from {
+              opacity: 0;
+              transform: scale(0.72);
+            }
+            to {
+              opacity: 1;
+              transform: scale(1);
+            }
+          }
+
+          @keyframes runningLifeModalIn {
+            from {
+              opacity: 0;
+              transform: translateY(24px) scale(0.94);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+        `}</style>
       </Helmet>
 
       <div className="min-h-screen bg-zinc-950 px-4 py-10 text-white md:px-8 md:py-14">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
-          <div className="mb-8 flex flex-wrap items-center justify-center gap-4 rounded-full border border-white/10 bg-black/30 px-5 py-3 backdrop-blur-sm">
+          <div
+            className="mb-8 flex flex-wrap items-center justify-center gap-4 rounded-full border border-white/10 bg-black/30 px-5 py-3 backdrop-blur-sm"
+            style={{
+              opacity: 0,
+              animation:
+                'runningLifeFadeSlide 0.7s cubic-bezier(0.22,1,0.36,1) 1.55s forwards',
+            }}
+          >
             {[
               { label: '< 100 km', color: COLORS.level1 },
               { label: '100 - 200 km', color: COLORS.level2 },
@@ -235,6 +276,9 @@ const RunningLifePage = () => {
                 style={{
                   top: `${Math.round(gridHeight * 0.25)}px`,
                   transform: 'translateY(-50%)',
+                  opacity: 0,
+                  animation:
+                    'runningLifeFadeSlide 0.9s cubic-bezier(0.22,1,0.36,1) 1.05s forwards',
                 }}
               >
                 <h1 className="text-4xl font-black uppercase tracking-tight text-white drop-shadow-lg md:text-6xl md:italic">
@@ -268,6 +312,13 @@ const RunningLifePage = () => {
                       height: `${CELL_SIZE}px`,
                       borderRadius: `${CELL_RADIUS}px`,
                       backgroundColor: month.color,
+                      opacity: 0,
+                      animation:
+                        'runningLifeScaleIn 0.36s cubic-bezier(0.22,1,0.36,1) forwards',
+                      animationDelay: `${Math.min(
+                        Math.floor(month.id / GRID_COLS) * 0.045,
+                        1.45
+                      )}s`,
                     }}
                   />
                 ))}
@@ -278,7 +329,13 @@ const RunningLifePage = () => {
 
         {selectedMonth ? (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-            <div className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl shadow-black/60">
+            <div
+              className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl shadow-black/60"
+              style={{
+                animation:
+                  'runningLifeModalIn 0.26s cubic-bezier(0.22,1,0.36,1) forwards',
+              }}
+            >
               <button
                 type="button"
                 onClick={() => setSelectedMonth(null)}
