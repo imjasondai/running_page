@@ -135,7 +135,7 @@ const RunningLifePage = () => {
   );
 
   const currentLifeMonth = completedLifeMonths + 1;
-  const progress = ((completedLifeMonths / GRID_TOTAL) * 100).toFixed(1);
+  const progress = ((currentLifeMonth / GRID_TOTAL) * 100).toFixed(1);
 
   const months = useMemo<LifeMonth[]>(() => {
     const result: LifeMonth[] = [];
@@ -209,16 +209,16 @@ const RunningLifePage = () => {
               <span className="text-red-600">.Life</span>
             </h1>
             <p className="mt-3 font-mono text-sm text-zinc-400">
-              {completedLifeMonths}/{GRID_TOTAL} completed months
-              <span className="mx-2 text-zinc-600">·</span>
-              month {currentLifeMonth} in progress
+              {currentLifeMonth}/{GRID_TOTAL} months
               <span className="mx-2 text-zinc-600">·</span>
               {progress}%
             </p>
             <p className="mt-3 max-w-2xl text-sm text-zinc-500">
               Born on 1989-01-13. This grid spans {LIFE_EXPECTANCY_YEARS} years
-              of life, or {GRID_TOTAL} months. Running data starts from your
-              first recorded run, so earlier life months stay dark by design.
+              of life, or {GRID_TOTAL} months. Today is in your{' '}
+              {currentLifeMonth}
+              th life month, and running data starts from your first recorded
+              run, so earlier life months stay dark by design.
             </p>
           </div>
 
