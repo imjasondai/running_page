@@ -308,7 +308,7 @@ const RunningLifePage = () => {
 
       <div
         className={`min-h-screen bg-zinc-950 px-4 py-10 text-white transition-[filter,opacity,transform] duration-300 ease-out md:px-8 md:py-14 ${
-          selectedMonth ? 'scale-[0.985] blur-[8px] opacity-35' : ''
+          selectedMonth ? 'scale-[0.985] opacity-35 blur-[8px]' : ''
         }`}
       >
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
@@ -414,7 +414,7 @@ const RunningLifePage = () => {
 
         {selectedMonth ? (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/28 p-4 backdrop-blur-[3px]"
+            className="bg-black/28 fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-[3px]"
             style={{
               animation:
                 'runningLifeOverlayIn 0.2s cubic-bezier(0.22,1,0.36,1) forwards',
