@@ -1,5 +1,6 @@
 import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { toPng } from 'html-to-image';
 import useActivities from '@/hooks/useActivities';
 
 type LifeMonth = {
@@ -134,12 +135,17 @@ const MetricIcon = ({
 
 const RunningLifePage = () => {
   const { activities } = useActivities();
+  const captureRef = useRef<HTMLDivElement | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<MonthDetail | null>(null);
   const [modalOrigin, setModalOrigin] = useState<ModalOrigin | null>(null);
   const [modalPosition, setModalPosition] = useState<ModalPosition | null>(
     null
   );
   const [isClosing, setIsClosing] = useState(false);
+  const [heroHovered, setHeroHovered] = useState(false);
+  const [displayMode, setDisplayMode] = useState<'overlay' | 'standard'>(
+    'overlay'
+  );
   const closeTimeoutRef = useRef<number | null>(null);
 
   const firstRunMonth = useMemo(() => {
@@ -301,6 +307,30 @@ const RunningLifePage = () => {
   const gridHeight = GRID_ROWS * CELL_SIZE + (GRID_ROWS - 1) * CELL_GAP;
   const modalCardClass =
     'rounded-[20px] border border-white/5 bg-[#131316] px-5 py-4';
+  const heroTop =
+    displayMode === 'overlay' ? Math.round(gridHeight * 0.25) : 18;
+  const heroTransform =
+    displayMode === 'overlay' ? 'translateY(-50%)' : 'translateY(0)';
+
+  const handleDownloadWallpaper = async () => {
+    if (!captureRef.current) {
+      return;
+    }
+
+    try {
+      const dataUrl = await toPng(captureRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: '#09090b',
+      });
+      const link = document.createElement('a');
+      link.download = 'running-life-wallpaper.png';
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error('Failed to export running life wallpaper', error);
+    }
+  };
 
   return (
     <>
@@ -394,6 +424,17 @@ const RunningLifePage = () => {
               transform: translate(-50%, -50%) scale(0.9);
             }
           }
+
+          @keyframes runningLifeHeroFloatIn {
+            from {
+              opacity: 0;
+              transform: translateY(8px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
         `}</style>
       </Helmet>
 
@@ -402,30 +443,112 @@ const RunningLifePage = () => {
           <div className="w-full overflow-x-auto pb-6">
             <div
               className="relative mx-auto"
+              ref={captureRef}
               style={{
                 width: `${gridWidth}px`,
                 height: `${gridHeight}px`,
               }}
             >
               <div
-                className="pointer-events-none absolute left-0 z-10 flex w-full flex-col items-center px-4 text-center"
+                className="absolute left-0 z-20 flex w-full justify-center px-4"
                 style={{
-                  top: `${Math.round(gridHeight * 0.25)}px`,
-                  transform: 'translateY(-50%)',
+                  top: `${heroTop}px`,
+                  transform: heroTransform,
                   opacity: 0,
                   animation:
                     'runningLifeFadeSlide 0.9s cubic-bezier(0.22,1,0.36,1) 1.05s forwards',
                 }}
+                onMouseEnter={() => setHeroHovered(true)}
+                onMouseLeave={() => setHeroHovered(false)}
               >
-                <h1 className="mb-2 text-center text-3xl font-black uppercase tracking-tighter text-white/90 drop-shadow-lg md:text-5xl">
-                  RUNNING
-                  <span className="text-red-600">.Life</span>
-                </h1>
-                <p className="font-mono text-sm text-zinc-400 drop-shadow-md">
-                  {currentLifeMonth}/{GRID_TOTAL} months
-                  <span className="mx-2 text-zinc-500">·</span>
-                  {progress}%
-                </p>
+                <div className="relative w-[420px] max-w-full">
+                  <div
+                    className={`pointer-events-none absolute inset-[-20px] rounded-[30px] bg-black/70 shadow-[0_30px_80px_rgba(0,0,0,0.7)] transition-all duration-300 ${
+                      heroHovered
+                        ? 'scale-100 opacity-100'
+                        : 'scale-95 opacity-0'
+                    }`}
+                  />
+
+                  <div
+                    className={`absolute left-3 top-1/2 flex -translate-y-1/2 flex-col gap-3 transition-all duration-300 ${
+                      heroHovered
+                        ? 'translate-x-0 opacity-100'
+                        : 'pointer-events-none -translate-x-3 opacity-0'
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={handleDownloadWallpaper}
+                      className="group flex items-center gap-3 rounded-full border border-white/10 bg-zinc-900/90 px-3 py-2 text-left text-zinc-200 shadow-lg shadow-black/40 backdrop-blur-md transition hover:border-white/20 hover:bg-zinc-800/90"
+                    >
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-800 text-white">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M12 3v12" />
+                          <path d="m7 10 5 5 5-5" />
+                          <path d="M5 21h14" />
+                        </svg>
+                      </span>
+                      <span className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-zinc-300">
+                        Download Wallpaper
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setDisplayMode((mode) =>
+                          mode === 'overlay' ? 'standard' : 'overlay'
+                        )
+                      }
+                      className="group flex items-center gap-3 rounded-full border border-white/10 bg-zinc-900/90 px-3 py-2 text-left text-zinc-200 shadow-lg shadow-black/40 backdrop-blur-md transition hover:border-white/20 hover:bg-zinc-800/90"
+                    >
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-800 text-white">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <rect x="4" y="5" width="16" height="4" rx="1.5" />
+                          <rect x="4" y="15" width="16" height="4" rx="1.5" />
+                        </svg>
+                      </span>
+                      <span className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-zinc-300">
+                        {displayMode === 'overlay'
+                          ? 'Switch To Standard'
+                          : 'Switch To Overlay'}
+                      </span>
+                    </button>
+                  </div>
+
+                  <div className="relative flex flex-col items-center px-24 text-center">
+                    <h1 className="mb-2 text-center text-3xl font-black uppercase tracking-tighter text-white/90 drop-shadow-lg md:text-5xl">
+                      RUNNING
+                      <span className="text-red-600">.Life</span>
+                    </h1>
+                    <p className="font-mono text-sm text-zinc-400 drop-shadow-md">
+                      {currentLifeMonth}/{GRID_TOTAL} months
+                      <span className="mx-2 text-zinc-500">·</span>
+                      {progress}%
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div
