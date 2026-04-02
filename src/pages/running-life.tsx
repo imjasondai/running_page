@@ -237,32 +237,6 @@ const RunningLifePage = () => {
 
       <div className="min-h-screen bg-zinc-950 px-4 py-10 text-white md:px-8 md:py-14">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
-          <div
-            className="mb-8 flex flex-wrap items-center justify-center gap-4 rounded-full border border-white/10 bg-black/30 px-5 py-3 backdrop-blur-sm"
-            style={{
-              opacity: 0,
-              animation:
-                'runningLifeFadeSlide 0.7s cubic-bezier(0.22,1,0.36,1) 1.55s forwards',
-            }}
-          >
-            {[
-              { label: '< 100 km', color: COLORS.level1 },
-              { label: '100 - 200 km', color: COLORS.level2 },
-              { label: '200 - 300 km', color: COLORS.level3 },
-              { label: '> 300 km', color: COLORS.level4 },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center gap-2">
-                <span
-                  className="h-3 w-3 rounded-full"
-                  style={{ backgroundColor: item.color }}
-                />
-                <span className="text-xs font-medium text-zinc-300">
-                  {item.label}
-                </span>
-              </div>
-            ))}
-          </div>
-
           <div className="w-full overflow-x-auto pb-6">
             <div
               className="relative mx-auto"
@@ -290,6 +264,36 @@ const RunningLifePage = () => {
                   <span className="mx-2 text-zinc-500">·</span>
                   {progress}%
                 </p>
+              </div>
+
+              <div
+                className="pointer-events-none absolute left-0 z-10 flex w-full justify-center px-4"
+                style={{
+                  top: `${Math.round(gridHeight * 0.82)}px`,
+                  transform: 'translateY(-50%)',
+                  opacity: 0,
+                  animation:
+                    'runningLifeFadeSlide 0.7s cubic-bezier(0.22,1,0.36,1) 1.55s forwards',
+                }}
+              >
+                <div className="flex flex-wrap items-center justify-center gap-4 rounded-full border border-white/5 bg-black/40 px-5 py-3 backdrop-blur-sm">
+                  {[
+                    { label: '< 100 km', color: COLORS.level1 },
+                    { label: '100 - 200 km', color: COLORS.level2 },
+                    { label: '200 - 300 km', color: COLORS.level3 },
+                    { label: '> 300 km', color: COLORS.level4 },
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-center gap-2">
+                      <span
+                        className="h-2.5 w-2.5"
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <span className="whitespace-nowrap text-xs font-medium text-zinc-300">
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div
