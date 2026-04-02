@@ -238,7 +238,7 @@ const RunningLifePage = () => {
   const gridWidth = GRID_COLS * CELL_SIZE + (GRID_COLS - 1) * CELL_GAP;
   const gridHeight = GRID_ROWS * CELL_SIZE + (GRID_ROWS - 1) * CELL_GAP;
   const modalCardClass =
-    'rounded-[24px] border border-white/5 bg-[#131316] px-6 py-5';
+    'rounded-[20px] border border-white/5 bg-[#131316] px-5 py-4';
 
   return (
     <>
@@ -386,18 +386,18 @@ const RunningLifePage = () => {
             onClick={() => setSelectedMonth(null)}
           >
             <div
-              className="border-white/8 relative w-full max-w-[580px] overflow-hidden rounded-[30px] border bg-[#1a1a1d] p-8 shadow-2xl shadow-black/60"
+              className="border-white/8 relative w-full max-w-[420px] overflow-hidden rounded-[28px] border bg-[#1a1a1d] p-6 shadow-2xl shadow-black/60"
               style={{
                 animation:
                   'runningLifeModalIn 0.26s cubic-bezier(0.22,1,0.36,1) forwards',
               }}
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="pointer-events-none absolute right-[-70px] top-[-90px] h-64 w-64 rounded-full bg-white/[0.03]" />
+              <div className="pointer-events-none absolute right-[-54px] top-[-82px] h-52 w-52 rounded-full bg-white/[0.03]" />
               <button
                 type="button"
                 onClick={() => setSelectedMonth(null)}
-                className="absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.04] text-zinc-400 transition-colors hover:bg-white/[0.08] hover:text-white"
+                className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.04] text-zinc-400 transition-colors hover:bg-white/[0.08] hover:text-white"
                 aria-label="Close monthly summary"
               >
                 <svg
@@ -414,11 +414,11 @@ const RunningLifePage = () => {
                 </svg>
               </button>
 
-              <div className="mb-8">
+              <div className="mb-6">
                 <div className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">
                   Monthly Summary
                 </div>
-                <h2 className="mt-3 text-[54px] font-black leading-none tracking-tighter text-white">
+                <h2 className="mt-2 text-[44px] font-black leading-none tracking-tighter text-white">
                   {selectedMonth.year}
                   <span className="text-zinc-400">
                     .{String(selectedMonth.month).padStart(2, '0')}
@@ -426,13 +426,13 @@ const RunningLifePage = () => {
                 </h2>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-2 gap-4">
                 <div className={modalCardClass}>
-                  <div className="mb-5 flex items-center gap-3 text-zinc-400">
+                  <div className="mb-4 flex items-center gap-2.5 text-zinc-400">
                     <MetricIcon type="distance" />
                     <span className="text-xs font-medium">Distance</span>
                   </div>
-                  <div className="text-[34px] font-black leading-none text-white">
+                  <div className="text-[28px] font-black leading-none text-white">
                     {selectedMonth.distanceKm.toFixed(1)}
                     <span className="ml-2 text-sm font-medium text-zinc-500">
                       km
@@ -441,31 +441,31 @@ const RunningLifePage = () => {
                 </div>
 
                 <div className={modalCardClass}>
-                  <div className="mb-5 flex items-center gap-3 text-zinc-400">
+                  <div className="mb-4 flex items-center gap-2.5 text-zinc-400">
                     <MetricIcon type="runs" />
                     <span className="text-xs font-medium">Runs</span>
                   </div>
-                  <div className="text-[34px] font-black leading-none text-white">
+                  <div className="text-[28px] font-black leading-none text-white">
                     {selectedMonth.runCount}
                   </div>
                 </div>
 
                 <div className={modalCardClass}>
-                  <div className="mb-5 flex items-center gap-3 text-zinc-400">
+                  <div className="mb-4 flex items-center gap-2.5 text-zinc-400">
                     <MetricIcon type="time" />
                     <span className="text-xs font-medium">Time</span>
                   </div>
-                  <div className="text-[34px] font-black leading-none text-white">
+                  <div className="text-[28px] font-black leading-none text-white">
                     {selectedMonth.durationLabel}
                   </div>
                 </div>
 
                 <div className={modalCardClass}>
-                  <div className="mb-5 flex items-center gap-3 text-zinc-400">
+                  <div className="mb-4 flex items-center gap-2.5 text-zinc-400">
                     <MetricIcon type="pace" />
                     <span className="text-xs font-medium">Avg Pace</span>
                   </div>
-                  <div className="text-[34px] font-black leading-none text-white">
+                  <div className="text-[28px] font-black leading-none text-white">
                     {selectedMonth.avgPaceLabel}
                     <span className="ml-2 text-sm font-medium text-zinc-500">
                       /km
