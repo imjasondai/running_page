@@ -461,9 +461,9 @@ const RunningLifePage = () => {
                 onMouseEnter={() => setHeroHovered(true)}
                 onMouseLeave={() => setHeroHovered(false)}
               >
-                <div className="relative w-[420px] max-w-full">
+                <div className="relative w-[640px] max-w-full">
                   <div
-                    className={`bg-black/78 pointer-events-none absolute left-1/2 top-1/2 h-[18px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded-[20px] shadow-[0_18px_50px_rgba(0,0,0,0.72)] transition-all duration-300 ${
+                    className={`bg-black/72 pointer-events-none absolute left-[250px] top-1/2 h-[74px] w-[420px] -translate-y-1/2 rounded-[22px] shadow-[0_24px_60px_rgba(0,0,0,0.72)] transition-all duration-300 ${
                       heroHovered
                         ? 'scale-100 opacity-100'
                         : 'scale-95 opacity-0'
@@ -471,13 +471,12 @@ const RunningLifePage = () => {
                   />
 
                   <div
-                    className={`absolute left-[calc(100%+18px)] top-1/2 flex -translate-y-1/2 flex-col gap-3 transition-all duration-300 ${
+                    className={`absolute right-[14px] top-1/2 flex -translate-y-1/2 flex-col gap-[10px] transition-all duration-300 ${
                       heroHovered
                         ? 'translate-x-0 opacity-100'
                         : 'pointer-events-none translate-x-2 opacity-0'
                     }`}
                     style={{
-                      marginLeft: `${CELL_SIZE + CELL_GAP}px`,
                       animation: heroHovered
                         ? 'runningLifeHeroFloatIn 0.22s cubic-bezier(0.22,1,0.36,1)'
                         : undefined,
@@ -486,28 +485,25 @@ const RunningLifePage = () => {
                     <button
                       type="button"
                       onClick={handleDownloadWallpaper}
-                      className="group flex items-center gap-3 rounded-full border border-white/10 bg-zinc-900/90 px-3 py-2 text-left text-zinc-200 shadow-lg shadow-black/40 backdrop-blur-md transition hover:border-white/20 hover:bg-zinc-800/90"
+                      title="Download Running Life wallpaper"
+                      aria-label="Download Running Life wallpaper"
+                      className="border-white/8 bg-zinc-900/88 hover:bg-zinc-800/92 flex h-[42px] w-[42px] items-center justify-center rounded-full border text-zinc-300 shadow-lg shadow-black/40 backdrop-blur-md transition hover:border-white/20 hover:text-white"
                     >
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-800 text-white">
-                        <svg
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M12 3v12" />
-                          <path d="m7 10 5 5 5-5" />
-                          <path d="M5 21h14" />
-                        </svg>
-                      </span>
-                      <span className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-zinc-300">
-                        Download Wallpaper
-                      </span>
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        stroke="currentColor"
+                        strokeWidth="1.9"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M12 4v10" />
+                        <path d="m8.5 10.5 3.5 3.5 3.5-3.5" />
+                        <path d="M5 18.5v1.5h14v-1.5" />
+                      </svg>
                     </button>
 
                     <button
@@ -517,29 +513,33 @@ const RunningLifePage = () => {
                           mode === 'overlay' ? 'standard' : 'overlay'
                         )
                       }
-                      className="group flex items-center gap-3 rounded-full border border-white/10 bg-zinc-900/90 px-3 py-2 text-left text-zinc-200 shadow-lg shadow-black/40 backdrop-blur-md transition hover:border-white/20 hover:bg-zinc-800/90"
+                      title={
+                        displayMode === 'overlay'
+                          ? 'Switch to standard mode'
+                          : 'Switch to overlay mode'
+                      }
+                      aria-label={
+                        displayMode === 'overlay'
+                          ? 'Switch to standard mode'
+                          : 'Switch to overlay mode'
+                      }
+                      className="border-white/8 bg-zinc-900/88 hover:bg-zinc-800/92 flex h-[42px] w-[42px] items-center justify-center rounded-full border text-zinc-300 shadow-lg shadow-black/40 backdrop-blur-md transition hover:border-white/20 hover:text-white"
                     >
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-800 text-white">
-                        <svg
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <rect x="4" y="5" width="16" height="4" rx="1.5" />
-                          <rect x="4" y="15" width="16" height="4" rx="1.5" />
-                        </svg>
-                      </span>
-                      <span className="whitespace-nowrap text-xs font-medium uppercase tracking-[0.14em] text-zinc-300">
-                        {displayMode === 'overlay'
-                          ? 'Switch To Standard'
-                          : 'Switch To Overlay'}
-                      </span>
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <rect x="4" y="6" width="16" height="4" rx="1.4" />
+                        <rect x="4" y="14" width="7" height="4" rx="1.4" />
+                        <rect x="13" y="14" width="7" height="4" rx="1.4" />
+                      </svg>
                     </button>
                   </div>
 
