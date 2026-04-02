@@ -79,6 +79,49 @@ const formatPace = (secondsPerKm: number) => {
   return `${minutes}'${String(seconds).padStart(2, '0')}"`;
 };
 
+const MetricIcon = ({
+  type,
+}: {
+  type: 'distance' | 'runs' | 'time' | 'pace';
+}) => {
+  const commonProps = {
+    width: 18,
+    height: 18,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    xmlns: 'http://www.w3.org/2000/svg',
+    stroke: 'currentColor',
+    strokeWidth: 1.8,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+  };
+
+  if (type === 'distance') {
+    return (
+      <svg {...commonProps}>
+        <path d="M3 12h4l2-6 4 12 2-6h6" />
+      </svg>
+    );
+  }
+
+  if (type === 'runs') {
+    return (
+      <svg {...commonProps}>
+        <rect x="3" y="5" width="18" height="16" rx="2" />
+        <path d="M16 3v4M8 3v4M3 11h18" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...commonProps}>
+      <circle cx="12" cy="13" r="7" />
+      <path d="M12 13l3-2" />
+      <path d="M9 3h6" />
+    </svg>
+  );
+};
+
 const RunningLifePage = () => {
   const { activities } = useActivities();
   const [selectedMonth, setSelectedMonth] = useState<MonthDetail | null>(null);
@@ -194,6 +237,8 @@ const RunningLifePage = () => {
 
   const gridWidth = GRID_COLS * CELL_SIZE + (GRID_COLS - 1) * CELL_GAP;
   const gridHeight = GRID_ROWS * CELL_SIZE + (GRID_ROWS - 1) * CELL_GAP;
+  const modalCardClass =
+    'rounded-[24px] border border-white/5 bg-[#131316] px-6 py-5';
 
   return (
     <>
@@ -317,6 +362,10 @@ const RunningLifePage = () => {
                       borderRadius: `${CELL_RADIUS}px`,
                       backgroundColor: month.color,
                       opacity: 0,
+                      cursor:
+                        month.future || month.distanceKm <= 0
+                          ? 'default'
+                          : 'pointer',
                       animation:
                         'runningLifeScaleIn 0.36s cubic-bezier(0.22,1,0.36,1) forwards',
                       animationDelay: `${Math.min(
@@ -332,69 +381,93 @@ const RunningLifePage = () => {
         </div>
 
         {selectedMonth ? (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div
+            className="bg-black/72 fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-[2px]"
+            onClick={() => setSelectedMonth(null)}
+          >
             <div
-              className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl shadow-black/60"
+              className="border-white/8 relative w-full max-w-[580px] overflow-hidden rounded-[30px] border bg-[#1a1a1d] p-8 shadow-2xl shadow-black/60"
               style={{
                 animation:
                   'runningLifeModalIn 0.26s cubic-bezier(0.22,1,0.36,1) forwards',
               }}
+              onClick={(event) => event.stopPropagation()}
             >
+              <div className="pointer-events-none absolute right-[-70px] top-[-90px] h-64 w-64 rounded-full bg-white/[0.03]" />
               <button
                 type="button"
                 onClick={() => setSelectedMonth(null)}
-                className="absolute right-4 top-4 rounded-full bg-zinc-800/80 px-3 py-1 text-sm text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-white"
+                className="absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.04] text-zinc-400 transition-colors hover:bg-white/[0.08] hover:text-white"
+                aria-label="Close monthly summary"
               >
-                Close
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                >
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
               </button>
 
-              <div className="mb-6">
-                <div className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
+              <div className="mb-8">
+                <div className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">
                   Monthly Summary
                 </div>
-                <h2 className="mt-2 text-3xl font-black italic text-white">
+                <h2 className="mt-3 text-[54px] font-black leading-none tracking-tighter text-white">
                   {selectedMonth.year}
-                  <span className="text-zinc-500">
+                  <span className="text-zinc-400">
                     .{String(selectedMonth.month).padStart(2, '0')}
                   </span>
                 </h2>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-zinc-800/60 bg-zinc-950/60 p-4">
-                  <div className="mb-2 text-xs font-medium text-zinc-400">
-                    Distance
+              <div className="grid grid-cols-2 gap-6">
+                <div className={modalCardClass}>
+                  <div className="mb-5 flex items-center gap-3 text-zinc-400">
+                    <MetricIcon type="distance" />
+                    <span className="text-xs font-medium">Distance</span>
                   </div>
-                  <div className="text-2xl font-bold text-white">
+                  <div className="text-[34px] font-black leading-none text-white">
                     {selectedMonth.distanceKm.toFixed(1)}
-                    <span className="ml-1 text-sm font-normal text-zinc-500">
+                    <span className="ml-2 text-sm font-medium text-zinc-500">
                       km
                     </span>
                   </div>
                 </div>
-                <div className="rounded-2xl border border-zinc-800/60 bg-zinc-950/60 p-4">
-                  <div className="mb-2 text-xs font-medium text-zinc-400">
-                    Runs
+
+                <div className={modalCardClass}>
+                  <div className="mb-5 flex items-center gap-3 text-zinc-400">
+                    <MetricIcon type="runs" />
+                    <span className="text-xs font-medium">Runs</span>
                   </div>
-                  <div className="text-2xl font-bold text-white">
+                  <div className="text-[34px] font-black leading-none text-white">
                     {selectedMonth.runCount}
                   </div>
                 </div>
-                <div className="rounded-2xl border border-zinc-800/60 bg-zinc-950/60 p-4">
-                  <div className="mb-2 text-xs font-medium text-zinc-400">
-                    Time
+
+                <div className={modalCardClass}>
+                  <div className="mb-5 flex items-center gap-3 text-zinc-400">
+                    <MetricIcon type="time" />
+                    <span className="text-xs font-medium">Time</span>
                   </div>
-                  <div className="text-2xl font-bold text-white">
+                  <div className="text-[34px] font-black leading-none text-white">
                     {selectedMonth.durationLabel}
                   </div>
                 </div>
-                <div className="rounded-2xl border border-zinc-800/60 bg-zinc-950/60 p-4">
-                  <div className="mb-2 text-xs font-medium text-zinc-400">
-                    Avg Pace
+
+                <div className={modalCardClass}>
+                  <div className="mb-5 flex items-center gap-3 text-zinc-400">
+                    <MetricIcon type="pace" />
+                    <span className="text-xs font-medium">Avg Pace</span>
                   </div>
-                  <div className="text-2xl font-bold text-white">
+                  <div className="text-[34px] font-black leading-none text-white">
                     {selectedMonth.avgPaceLabel}
-                    <span className="ml-1 text-sm font-normal text-zinc-500">
+                    <span className="ml-2 text-sm font-medium text-zinc-500">
                       /km
                     </span>
                   </div>
