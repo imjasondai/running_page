@@ -281,11 +281,11 @@ const RunningLifePage = () => {
                     'runningLifeFadeSlide 0.9s cubic-bezier(0.22,1,0.36,1) 1.05s forwards',
                 }}
               >
-                <h1 className="text-4xl font-black uppercase tracking-tight text-white drop-shadow-lg md:text-6xl md:italic">
-                  Running
+                <h1 className="mb-2 text-center text-3xl font-black uppercase tracking-tighter text-white/90 drop-shadow-lg md:text-5xl md:italic">
+                  RUNNING
                   <span className="text-red-600">.Life</span>
                 </h1>
-                <p className="mt-3 font-mono text-sm text-zinc-300 drop-shadow-md">
+                <p className="font-mono text-sm text-zinc-400 drop-shadow-md">
                   {currentLifeMonth}/{GRID_TOTAL} months
                   <span className="mx-2 text-zinc-500">·</span>
                   {progress}%
