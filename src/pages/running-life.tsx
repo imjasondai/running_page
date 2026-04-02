@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { type MouseEvent, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import useActivities from '@/hooks/useActivities';
 
@@ -19,6 +19,11 @@ type MonthDetail = {
   runCount: number;
   durationLabel: string;
   avgPaceLabel: string;
+};
+
+type ModalOrigin = {
+  xPercent: number;
+  yPercent: number;
 };
 
 const BIRTH_DATE = new Date(1989, 0, 13);
@@ -125,6 +130,7 @@ const MetricIcon = ({
 const RunningLifePage = () => {
   const { activities } = useActivities();
   const [selectedMonth, setSelectedMonth] = useState<MonthDetail | null>(null);
+  const [modalOrigin, setModalOrigin] = useState<ModalOrigin | null>(null);
 
   const firstRunMonth = useMemo(() => {
     if (activities.length === 0) {
@@ -219,10 +225,21 @@ const RunningLifePage = () => {
     return result;
   }, [currentMonth, firstRunMonth, lifeStartMonth, monthlyStats]);
 
-  const handleMonthClick = (month: LifeMonth) => {
+  const handleMonthClick = (
+    month: LifeMonth,
+    target: HTMLButtonElement | null
+  ) => {
     if (month.future || month.distanceKm <= 0) return;
     const stat = monthlyStats[month.key];
     if (!stat) return;
+
+    if (target) {
+      const rect = target.getBoundingClientRect();
+      setModalOrigin({
+        xPercent: ((rect.left + rect.width / 2) / window.innerWidth) * 100,
+        yPercent: ((rect.top + rect.height / 2) / window.innerHeight) * 100,
+      });
+    }
 
     const secondsPerKm = stat.durationSeconds / stat.distanceKm;
     setSelectedMonth({
@@ -270,17 +287,30 @@ const RunningLifePage = () => {
           @keyframes runningLifeModalIn {
             from {
               opacity: 0;
-              transform: translateY(24px) scale(0.94);
+              transform: translateY(18px) scale(0.72);
             }
             to {
               opacity: 1;
               transform: translateY(0) scale(1);
             }
           }
+
+          @keyframes runningLifeOverlayIn {
+            from {
+              opacity: 0;
+            }
+            to {
+              opacity: 1;
+            }
+          }
         `}</style>
       </Helmet>
 
-      <div className="min-h-screen bg-zinc-950 px-4 py-10 text-white md:px-8 md:py-14">
+      <div
+        className={`min-h-screen bg-zinc-950 px-4 py-10 text-white transition-[filter,opacity,transform] duration-300 ease-out md:px-8 md:py-14 ${
+          selectedMonth ? 'scale-[0.985] blur-[8px] opacity-35' : ''
+        }`}
+      >
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
           <div className="w-full overflow-x-auto pb-6">
             <div
@@ -352,7 +382,9 @@ const RunningLifePage = () => {
                   <button
                     key={month.id}
                     type="button"
-                    onClick={() => handleMonthClick(month)}
+                    onClick={(event: MouseEvent<HTMLButtonElement>) =>
+                      handleMonthClick(month, event.currentTarget)
+                    }
                     className="transition-transform duration-200 hover:scale-110 hover:ring-2 hover:ring-white/40 disabled:cursor-default disabled:hover:scale-100 disabled:hover:ring-0"
                     disabled={month.future || month.distanceKm <= 0}
                     title={`${month.year}-${String(month.month).padStart(2, '0')}: ${month.distanceKm.toFixed(1)} km`}
@@ -382,21 +414,34 @@ const RunningLifePage = () => {
 
         {selectedMonth ? (
           <div
-            className="bg-black/72 fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-[2px]"
-            onClick={() => setSelectedMonth(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/28 p-4 backdrop-blur-[3px]"
+            style={{
+              animation:
+                'runningLifeOverlayIn 0.2s cubic-bezier(0.22,1,0.36,1) forwards',
+            }}
+            onClick={() => {
+              setSelectedMonth(null);
+              setModalOrigin(null);
+            }}
           >
             <div
               className="border-white/8 relative w-full max-w-[420px] overflow-hidden rounded-[28px] border bg-[#1a1a1d] p-6 shadow-2xl shadow-black/60"
               style={{
                 animation:
-                  'runningLifeModalIn 0.26s cubic-bezier(0.22,1,0.36,1) forwards',
+                  'runningLifeModalIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards',
+                transformOrigin: modalOrigin
+                  ? `${modalOrigin.xPercent}% ${modalOrigin.yPercent}%`
+                  : '50% 50%',
               }}
               onClick={(event) => event.stopPropagation()}
             >
               <div className="pointer-events-none absolute right-[-54px] top-[-82px] h-52 w-52 rounded-full bg-white/[0.03]" />
               <button
                 type="button"
-                onClick={() => setSelectedMonth(null)}
+                onClick={() => {
+                  setSelectedMonth(null);
+                  setModalOrigin(null);
+                }}
                 className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.04] text-zinc-400 transition-colors hover:bg-white/[0.08] hover:text-white"
                 aria-label="Close monthly summary"
               >
