@@ -1,7 +1,6 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import LocationStat from '@/components/LocationStat';
 import RunMap from '@/components/RunMap';
@@ -28,8 +27,8 @@ import {
 } from '@/utils/utils';
 import { useTheme, useThemeChangeCounter } from '@/hooks/useTheme';
 
-const Index = () => {
-  const { siteUrl } = useSiteMetadata();
+const OriginalPage = () => {
+  const { siteTitle, siteUrl } = useSiteMetadata();
   const { activities, thisYear } = useActivities();
   const themeChangeCounter = useThemeChangeCounter();
   const [year, setYear] = useState('Total');
@@ -165,7 +164,6 @@ const Index = () => {
           ...bounds,
         });
       }
-
       changeByItem(y, 'Year', filterYearRuns);
       setIsAnimating(false);
     },
@@ -345,161 +343,55 @@ const Index = () => {
     };
   }, [year, runs, locateActivity, thisYear]);
 
-  const totalDistanceKm = useMemo(() => {
-    return (
-      activities.reduce((sum, activity) => sum + activity.distance, 0) / 1000
-    );
-  }, [activities]);
-
-  const totalRuns = activities.length;
-  const currentYearDistanceKm = useMemo(() => {
-    return (
-      activities
-        .filter((activity) => activity.start_date_local.startsWith(thisYear))
-        .reduce((sum, activity) => sum + activity.distance, 0) / 1000
-    );
-  }, [activities, thisYear]);
-
   const { theme } = useTheme();
 
   return (
     <Layout>
       <Helmet>
         <html lang="en" data-theme={theme} />
+        <title>{`${siteTitle} / Original`}</title>
       </Helmet>
-      <div className="w-full text-white">
-        <div className="grid gap-8 lg:grid-cols-[340px_minmax(0,1fr)] lg:items-start">
-          <div className="space-y-8">
-            <section className="border-white/8 rounded-[2rem] border bg-zinc-950/80 p-8 shadow-2xl shadow-black/25">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-zinc-500">
-                Running Record
-              </p>
-              <h1
-                className="mt-5 text-[3.8rem] font-black uppercase leading-[0.9] tracking-[-0.09em] text-white sm:text-[4.8rem]"
-                style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
-              >
-                RUN
-                <span className="text-[#E31937]">.LOG</span>
-              </h1>
-              <p className="mt-5 max-w-sm text-sm leading-7 text-zinc-400">
-                A dark running archive with maps, yearly summaries, route
-                replays, and long-term records synchronized from Strava.
-              </p>
-              <div className="mt-7 grid grid-cols-3 gap-3">
-                <div className="border-white/8 bg-white/3 rounded-2xl border px-4 py-4">
-                  <p className="text-[10px] uppercase tracking-[0.26em] text-zinc-500">
-                    Total
-                  </p>
-                  <p className="mt-2 text-xl font-bold text-white">
-                    {Math.round(totalDistanceKm)}
-                    <span className="ml-1 text-xs font-normal text-zinc-500">
-                      km
-                    </span>
-                  </p>
-                </div>
-                <div className="border-white/8 bg-white/3 rounded-2xl border px-4 py-4">
-                  <p className="text-[10px] uppercase tracking-[0.26em] text-zinc-500">
-                    Runs
-                  </p>
-                  <p className="mt-2 text-xl font-bold text-white">
-                    {totalRuns}
-                  </p>
-                </div>
-                <div className="border-white/8 bg-white/3 rounded-2xl border px-4 py-4">
-                  <p className="text-[10px] uppercase tracking-[0.26em] text-zinc-500">
-                    {thisYear}
-                  </p>
-                  <p className="mt-2 text-xl font-bold text-white">
-                    {Math.round(currentYearDistanceKm)}
-                    <span className="ml-1 text-xs font-normal text-zinc-500">
-                      km
-                    </span>
-                  </p>
-                </div>
-              </div>
-              <div className="mt-7 flex flex-wrap items-center gap-4 text-sm">
-                <a
-                  href={siteUrl}
-                  className="text-zinc-300 transition-colors hover:text-white"
-                >
-                  run.dvorakd.com
-                </a>
-                <Link
-                  to="/original"
-                  className="text-zinc-500 transition-colors hover:text-white"
-                >
-                  View Original
-                </Link>
-              </div>
-            </section>
-
-            <section className="border-white/8 rounded-[2rem] border bg-zinc-950/70 p-6 shadow-xl shadow-black/15">
-              {(viewState.zoom ?? 0) <= 3 && IS_CHINESE ? (
-                <LocationStat
-                  changeYear={changeYear}
-                  changeCity={changeCity}
-                  changeTitle={changeTitle}
-                />
-              ) : (
-                <YearsStat year={year} onClick={changeYear} />
-              )}
-            </section>
-          </div>
-
-          <div className="space-y-8" id="map-container">
-            <section className="border-white/8 rounded-[2rem] border bg-zinc-950/70 p-3 shadow-2xl shadow-black/20">
-              <RunMap
-                title={title}
-                viewState={viewState}
-                geoData={animatedGeoData}
-                setViewState={setViewState}
-                changeYear={changeYear}
-                thisYear={year}
-                animationTrigger={animationTrigger}
-              />
-            </section>
-
-            <section className="border-white/8 rounded-[2rem] border bg-zinc-950/70 p-5 shadow-2xl shadow-black/20">
-              <div className="mb-5 flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-500">
-                    Archive
-                  </p>
-                  <h2
-                    className="mt-2 text-3xl font-black uppercase tracking-[-0.07em] text-white sm:text-4xl"
-                    style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
-                  >
-                    {year === 'Total' ? 'TOTAL SUMMARY' : `${year} SUMMARY`}
-                  </h2>
-                </div>
-                <div className="text-right text-xs uppercase tracking-[0.25em] text-zinc-600">
-                  {year === 'Total' ? 'All Years' : 'Selected Year'}
-                </div>
-              </div>
-              {year === 'Total' ? (
-                <SVGStat />
-              ) : (
-                <RunTable
-                  runs={runs}
-                  locateActivity={locateActivity}
-                  setActivity={setActivity}
-                  runIndex={runIndex}
-                  setRunIndex={setRunIndex}
-                />
-              )}
-            </section>
-          </div>
+      <div className="w-full lg:flex lg:gap-12">
+        <div className="w-full lg:w-1/3">
+          <h1 className="my-12 mt-6 text-6xl font-extrabold italic">
+            <a href={siteUrl}>{siteTitle}</a>
+          </h1>
+          {(viewState.zoom ?? 0) <= 3 && IS_CHINESE ? (
+            <LocationStat
+              changeYear={changeYear}
+              changeCity={changeCity}
+              changeTitle={changeTitle}
+            />
+          ) : (
+            <YearsStat year={year} onClick={changeYear} />
+          )}
         </div>
-
-        <footer className="mt-12 border-t border-white/10 bg-zinc-900/50 py-10">
-          <div className="px-1 text-center text-sm text-zinc-500">
-            © {new Date().getFullYear()} RUN.LOG. All miles counted.
-          </div>
-        </footer>
+        <div className="w-full lg:w-2/3" id="map-container">
+          <RunMap
+            title={title}
+            viewState={viewState}
+            geoData={animatedGeoData}
+            setViewState={setViewState}
+            changeYear={changeYear}
+            thisYear={year}
+            animationTrigger={animationTrigger}
+          />
+          {year === 'Total' ? (
+            <SVGStat />
+          ) : (
+            <RunTable
+              runs={runs}
+              locateActivity={locateActivity}
+              setActivity={setActivity}
+              runIndex={runIndex}
+              setRunIndex={setRunIndex}
+            />
+          )}
+        </div>
       </div>
       {import.meta.env.VERCEL && <Analytics />}
     </Layout>
   );
 };
 
-export default Index;
+export default OriginalPage;

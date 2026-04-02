@@ -20,7 +20,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
         />
       </Helmet>
       <Header />
-      <div className="mb-16 w-full px-4 pt-28 lg:flex lg:px-16 lg:pb-16 lg:pt-28">
+      <div className="mx-auto mb-16 w-full max-w-7xl px-6 pb-10 pt-24">
         {children}
       </div>
     </>
