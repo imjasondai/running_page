@@ -423,10 +423,12 @@ const RunningLifePage = () => {
                   animation:
                     'runningLifeFadeSlide 0.9s cubic-bezier(0.22,1,0.36,1) 1.05s forwards',
                 }}
-                onMouseEnter={() => setHeroHovered(true)}
-                onMouseLeave={() => setHeroHovered(false)}
               >
-                <div className="relative w-[640px] max-w-full">
+                <div
+                  className="relative w-[760px] max-w-none"
+                  onMouseEnter={() => setHeroHovered(true)}
+                  onMouseLeave={() => setHeroHovered(false)}
+                >
                   <div
                     className={`bg-black/72 pointer-events-none absolute left-[250px] top-1/2 h-[74px] w-[420px] -translate-y-1/2 rounded-[22px] shadow-[0_24px_60px_rgba(0,0,0,0.72)] transition-all duration-300 ${
                       heroHovered
@@ -465,8 +467,6 @@ const RunningLifePage = () => {
                     ? 'runningLifeHeroFloatIn 0.22s cubic-bezier(0.22,1,0.36,1)'
                     : undefined,
                 }}
-                onMouseEnter={() => setHeroHovered(true)}
-                onMouseLeave={() => setHeroHovered(false)}
               >
                 <button
                   type="button"
@@ -602,7 +602,7 @@ const RunningLifePage = () => {
 
         {selectedMonth ? (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-4 backdrop-blur-[8px]"
+            className="bg-black/8 fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-[4px]"
             style={{
               animation: isClosing
                 ? 'runningLifeOverlayOut 0.2s ease-in forwards'
