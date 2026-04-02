@@ -25,9 +25,9 @@ const BIRTH_DATE = new Date(1989, 0, 13);
 const GRID_COLS = 24;
 const GRID_ROWS = 43;
 const GRID_TOTAL = GRID_COLS * GRID_ROWS;
-const CELL_SIZE = 14;
-const CELL_GAP = 8;
-const CELL_RADIUS = 8;
+const CELL_SIZE = 8;
+const CELL_GAP = 10;
+const CELL_RADIUS = 2;
 
 const COLORS = {
   future: '#18181b',
@@ -281,7 +281,7 @@ const RunningLifePage = () => {
                     'runningLifeFadeSlide 0.9s cubic-bezier(0.22,1,0.36,1) 1.05s forwards',
                 }}
               >
-                <h1 className="mb-2 text-center text-3xl font-black uppercase tracking-tighter text-white/90 drop-shadow-lg md:text-5xl md:italic">
+                <h1 className="mb-2 text-center text-3xl font-black uppercase tracking-tighter text-white/90 drop-shadow-lg md:text-5xl">
                   RUNNING
                   <span className="text-red-600">.Life</span>
                 </h1>
