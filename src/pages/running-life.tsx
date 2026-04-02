@@ -471,12 +471,13 @@ const RunningLifePage = () => {
                   />
 
                   <div
-                    className={`absolute right-[14px] top-1/2 flex -translate-y-1/2 flex-col gap-[10px] transition-all duration-300 ${
+                    className={`absolute top-1/2 flex -translate-y-1/2 flex-col gap-[10px] transition-all duration-300 ${
                       heroHovered
                         ? 'translate-x-0 opacity-100'
                         : 'pointer-events-none translate-x-2 opacity-0'
                     }`}
                     style={{
+                      left: `${gridWidth + CELL_SIZE + CELL_GAP}px`,
                       animation: heroHovered
                         ? 'runningLifeHeroFloatIn 0.22s cubic-bezier(0.22,1,0.36,1)'
                         : undefined,
