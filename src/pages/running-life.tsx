@@ -287,7 +287,11 @@ const RunningLifePage = () => {
           @keyframes runningLifeModalIn {
             from {
               opacity: 0;
-              transform: translateY(18px) scale(0.72);
+              transform: translateY(18px) scale(0.82);
+            }
+            72% {
+              opacity: 1;
+              transform: translateY(-2px) scale(1.015);
             }
             to {
               opacity: 1;
@@ -308,7 +312,9 @@ const RunningLifePage = () => {
 
       <div
         className={`min-h-screen bg-zinc-950 px-4 py-10 text-white transition-[filter,opacity,transform] duration-300 ease-out md:px-8 md:py-14 ${
-          selectedMonth ? 'scale-[0.985] opacity-35 blur-[8px]' : ''
+          selectedMonth
+            ? 'saturate-75 scale-[0.992] blur-[6px] brightness-[0.7]'
+            : ''
         }`}
       >
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
@@ -414,7 +420,7 @@ const RunningLifePage = () => {
 
         {selectedMonth ? (
           <div
-            className="bg-black/28 fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-[3px]"
+            className="bg-black/18 fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-[4px]"
             style={{
               animation:
                 'runningLifeOverlayIn 0.2s cubic-bezier(0.22,1,0.36,1) forwards',
@@ -428,7 +434,7 @@ const RunningLifePage = () => {
               className="border-white/8 relative w-full max-w-[420px] overflow-hidden rounded-[28px] border bg-[#1a1a1d] p-6 shadow-2xl shadow-black/60"
               style={{
                 animation:
-                  'runningLifeModalIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards',
+                  'runningLifeModalIn 0.34s cubic-bezier(0.16,1,0.3,1) forwards',
                 transformOrigin: modalOrigin
                   ? `${modalOrigin.xPercent}% ${modalOrigin.yPercent}%`
                   : '50% 50%',
