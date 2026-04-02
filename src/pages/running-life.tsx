@@ -27,11 +27,6 @@ type ModalOrigin = {
   yPercent: number;
 };
 
-type ModalPosition = {
-  left: number;
-  top: number;
-};
-
 const BIRTH_DATE = new Date(1989, 0, 13);
 const GRID_COLS = 24;
 const GRID_ROWS = 43;
@@ -138,9 +133,6 @@ const RunningLifePage = () => {
   const captureRef = useRef<HTMLDivElement | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<MonthDetail | null>(null);
   const [modalOrigin, setModalOrigin] = useState<ModalOrigin | null>(null);
-  const [modalPosition, setModalPosition] = useState<ModalPosition | null>(
-    null
-  );
   const [isClosing, setIsClosing] = useState(false);
   const [heroHovered, setHeroHovered] = useState(false);
   const [displayMode, setDisplayMode] = useState<'overlay' | 'standard'>(
@@ -261,7 +253,6 @@ const RunningLifePage = () => {
     closeTimeoutRef.current = window.setTimeout(() => {
       setSelectedMonth(null);
       setModalOrigin(null);
-      setModalPosition(null);
       setIsClosing(false);
       closeTimeoutRef.current = null;
     }, 220);
@@ -280,10 +271,6 @@ const RunningLifePage = () => {
       setModalOrigin({
         xPercent: ((rect.left + rect.width / 2) / window.innerWidth) * 100,
         yPercent: ((rect.top + rect.height / 2) / window.innerHeight) * 100,
-      });
-      setModalPosition({
-        left: rect.left + rect.width / 2,
-        top: rect.top + rect.height / 2,
       });
     }
 
@@ -403,28 +390,6 @@ const RunningLifePage = () => {
             }
           }
 
-          @keyframes runningLifeBlurPulseIn {
-            from {
-              opacity: 0;
-              transform: translate(-50%, -50%) scale(0.72);
-            }
-            to {
-              opacity: 1;
-              transform: translate(-50%, -50%) scale(1);
-            }
-          }
-
-          @keyframes runningLifeBlurPulseOut {
-            from {
-              opacity: 1;
-              transform: translate(-50%, -50%) scale(1);
-            }
-            to {
-              opacity: 0;
-              transform: translate(-50%, -50%) scale(0.9);
-            }
-          }
-
           @keyframes runningLifeHeroFloatIn {
             from {
               opacity: 0;
@@ -469,81 +434,6 @@ const RunningLifePage = () => {
                         : 'scale-95 opacity-0'
                     }`}
                   />
-
-                  <div
-                    className={`absolute top-1/2 flex -translate-y-1/2 flex-col gap-[10px] transition-all duration-300 ${
-                      heroHovered
-                        ? 'translate-x-0 opacity-100'
-                        : 'pointer-events-none translate-x-2 opacity-0'
-                    }`}
-                    style={{
-                      left: `${gridWidth + CELL_SIZE + CELL_GAP}px`,
-                      animation: heroHovered
-                        ? 'runningLifeHeroFloatIn 0.22s cubic-bezier(0.22,1,0.36,1)'
-                        : undefined,
-                    }}
-                  >
-                    <button
-                      type="button"
-                      onClick={handleDownloadWallpaper}
-                      title="Download Running Life wallpaper"
-                      aria-label="Download Running Life wallpaper"
-                      className="border-white/8 bg-zinc-900/88 hover:bg-zinc-800/92 flex h-[42px] w-[42px] items-center justify-center rounded-full border text-zinc-300 shadow-lg shadow-black/40 backdrop-blur-md transition hover:border-white/20 hover:text-white"
-                    >
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        stroke="currentColor"
-                        strokeWidth="1.9"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M12 4v10" />
-                        <path d="m8.5 10.5 3.5 3.5 3.5-3.5" />
-                        <path d="M5 18.5v1.5h14v-1.5" />
-                      </svg>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setDisplayMode((mode) =>
-                          mode === 'overlay' ? 'standard' : 'overlay'
-                        )
-                      }
-                      title={
-                        displayMode === 'overlay'
-                          ? 'Switch to standard mode'
-                          : 'Switch to overlay mode'
-                      }
-                      aria-label={
-                        displayMode === 'overlay'
-                          ? 'Switch to standard mode'
-                          : 'Switch to overlay mode'
-                      }
-                      className="border-white/8 bg-zinc-900/88 hover:bg-zinc-800/92 flex h-[42px] w-[42px] items-center justify-center rounded-full border text-zinc-300 shadow-lg shadow-black/40 backdrop-blur-md transition hover:border-white/20 hover:text-white"
-                    >
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <rect x="4" y="6" width="16" height="4" rx="1.4" />
-                        <rect x="4" y="14" width="7" height="4" rx="1.4" />
-                        <rect x="13" y="14" width="7" height="4" rx="1.4" />
-                      </svg>
-                    </button>
-                  </div>
-
                   <div className="relative flex flex-col items-center text-center">
                     <h1 className="mb-2 text-center text-3xl font-black uppercase tracking-tighter text-white/90 drop-shadow-lg md:text-5xl">
                       RUNNING
@@ -556,6 +446,87 @@ const RunningLifePage = () => {
                     </p>
                   </div>
                 </div>
+              </div>
+
+              <div
+                className={`absolute z-20 flex flex-col gap-[10px] transition-all duration-300 ${
+                  heroHovered
+                    ? 'translate-x-0 opacity-100'
+                    : 'pointer-events-none translate-x-2 opacity-0'
+                }`}
+                style={{
+                  left: `${gridWidth + CELL_SIZE + CELL_GAP}px`,
+                  top: `${heroTop}px`,
+                  transform:
+                    displayMode === 'overlay'
+                      ? 'translateY(-50%)'
+                      : 'translateY(0)',
+                  animation: heroHovered
+                    ? 'runningLifeHeroFloatIn 0.22s cubic-bezier(0.22,1,0.36,1)'
+                    : undefined,
+                }}
+                onMouseEnter={() => setHeroHovered(true)}
+                onMouseLeave={() => setHeroHovered(false)}
+              >
+                <button
+                  type="button"
+                  onClick={handleDownloadWallpaper}
+                  title="Download Running Life wallpaper"
+                  aria-label="Download Running Life wallpaper"
+                  className="border-white/8 bg-zinc-900/88 hover:bg-zinc-800/92 flex h-[42px] w-[42px] items-center justify-center rounded-full border text-zinc-300 shadow-lg shadow-black/40 backdrop-blur-md transition hover:border-white/20 hover:text-white"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    stroke="currentColor"
+                    strokeWidth="1.9"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 4v10" />
+                    <path d="m8.5 10.5 3.5 3.5 3.5-3.5" />
+                    <path d="M5 18.5v1.5h14v-1.5" />
+                  </svg>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setDisplayMode((mode) =>
+                      mode === 'overlay' ? 'standard' : 'overlay'
+                    )
+                  }
+                  title={
+                    displayMode === 'overlay'
+                      ? 'Switch to standard mode'
+                      : 'Switch to overlay mode'
+                  }
+                  aria-label={
+                    displayMode === 'overlay'
+                      ? 'Switch to standard mode'
+                      : 'Switch to overlay mode'
+                  }
+                  className="border-white/8 bg-zinc-900/88 hover:bg-zinc-800/92 flex h-[42px] w-[42px] items-center justify-center rounded-full border text-zinc-300 shadow-lg shadow-black/40 backdrop-blur-md transition hover:border-white/20 hover:text-white"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="4" y="6" width="16" height="4" rx="1.4" />
+                    <rect x="4" y="14" width="7" height="4" rx="1.4" />
+                    <rect x="13" y="14" width="7" height="4" rx="1.4" />
+                  </svg>
+                </button>
               </div>
 
               <div
@@ -631,7 +602,7 @@ const RunningLifePage = () => {
 
         {selectedMonth ? (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-4 backdrop-blur-[8px]"
             style={{
               animation: isClosing
                 ? 'runningLifeOverlayOut 0.2s ease-in forwards'
@@ -639,18 +610,6 @@ const RunningLifePage = () => {
             }}
             onClick={closeModal}
           >
-            {modalPosition ? (
-              <div
-                className="bg-black/18 pointer-events-none absolute h-[360px] w-[460px] rounded-[40px] backdrop-blur-[10px]"
-                style={{
-                  left: `${modalPosition.left}px`,
-                  top: `${modalPosition.top}px`,
-                  animation: isClosing
-                    ? 'runningLifeBlurPulseOut 0.22s ease-in forwards'
-                    : 'runningLifeBlurPulseIn 0.28s cubic-bezier(0.16,1,0.3,1) forwards',
-                }}
-              />
-            ) : null}
             <div
               className="border-white/8 relative w-full max-w-[420px] overflow-hidden rounded-[28px] border bg-[#1a1a1d] p-6 shadow-2xl shadow-black/60"
               style={{
