@@ -276,7 +276,7 @@ const RunningLifePage = () => {
                     'runningLifeFadeSlide 0.7s cubic-bezier(0.22,1,0.36,1) 1.55s forwards',
                 }}
               >
-                <div className="flex flex-wrap items-center justify-center gap-4 rounded-full border border-white/5 bg-black/40 px-5 py-3 backdrop-blur-sm">
+                <div className="flex flex-nowrap items-center justify-center gap-3 rounded-full border border-white/5 bg-black/40 px-4 py-2 backdrop-blur-sm">
                   {[
                     { label: '< 100 km', color: COLORS.level1 },
                     { label: '100 - 200 km', color: COLORS.level2 },
@@ -285,10 +285,10 @@ const RunningLifePage = () => {
                   ].map((item) => (
                     <div key={item.label} className="flex items-center gap-2">
                       <span
-                        className="h-2.5 w-2.5"
+                        className="h-2 w-2 shrink-0"
                         style={{ backgroundColor: item.color }}
                       />
-                      <span className="whitespace-nowrap text-xs font-medium text-zinc-300">
+                      <span className="whitespace-nowrap text-[10px] font-medium text-zinc-300">
                         {item.label}
                       </span>
                     </div>
