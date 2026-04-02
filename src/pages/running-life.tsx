@@ -463,7 +463,7 @@ const RunningLifePage = () => {
               >
                 <div className="relative w-[420px] max-w-full">
                   <div
-                    className={`pointer-events-none absolute inset-[-20px] rounded-[30px] bg-black/70 shadow-[0_30px_80px_rgba(0,0,0,0.7)] transition-all duration-300 ${
+                    className={`bg-black/78 pointer-events-none absolute left-1/2 top-1/2 h-[18px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded-[20px] shadow-[0_18px_50px_rgba(0,0,0,0.72)] transition-all duration-300 ${
                       heroHovered
                         ? 'scale-100 opacity-100'
                         : 'scale-95 opacity-0'
@@ -471,11 +471,17 @@ const RunningLifePage = () => {
                   />
 
                   <div
-                    className={`absolute left-3 top-1/2 flex -translate-y-1/2 flex-col gap-3 transition-all duration-300 ${
+                    className={`absolute left-[calc(100%+18px)] top-1/2 flex -translate-y-1/2 flex-col gap-3 transition-all duration-300 ${
                       heroHovered
                         ? 'translate-x-0 opacity-100'
-                        : 'pointer-events-none -translate-x-3 opacity-0'
+                        : 'pointer-events-none translate-x-2 opacity-0'
                     }`}
+                    style={{
+                      marginLeft: `${CELL_SIZE + CELL_GAP}px`,
+                      animation: heroHovered
+                        ? 'runningLifeHeroFloatIn 0.22s cubic-bezier(0.22,1,0.36,1)'
+                        : undefined,
+                    }}
                   >
                     <button
                       type="button"
@@ -537,7 +543,7 @@ const RunningLifePage = () => {
                     </button>
                   </div>
 
-                  <div className="relative flex flex-col items-center px-24 text-center">
+                  <div className="relative flex flex-col items-center text-center">
                     <h1 className="mb-2 text-center text-3xl font-black uppercase tracking-tighter text-white/90 drop-shadow-lg md:text-5xl">
                       RUNNING
                       <span className="text-red-600">.Life</span>
