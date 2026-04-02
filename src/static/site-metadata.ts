@@ -21,24 +21,24 @@ const data: ISiteMetadataResult = {
   description: 'DvorakD personal running page powered by Strava',
   navLinks: [
     {
-      name: 'Running Page',
+      name: '首页',
       url: `${getBasePath()}/`,
     },
     {
-      name: 'Workouts',
-      url: `${getBasePath()}/workouts`,
+      name: '轨迹墙',
+      url: `${getBasePath()}/routes`,
     },
     {
-      name: 'Running Life',
+      name: '热力图',
+      url: `${getBasePath()}/heatmap`,
+    },
+    {
+      name: '奔跑人生',
       url: `${getBasePath()}/running-life`,
     },
     {
-      name: 'GitHub',
-      url: 'https://github.com/imjasondai/running_page',
-    },
-    {
-      name: 'About',
-      url: 'https://github.com/imjasondai/running_page/blob/master/STRAVA_SETUP_CN.md',
+      name: '赛事记录',
+      url: `${getBasePath()}/events`,
     },
   ],
 };

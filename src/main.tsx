@@ -14,6 +14,9 @@ import { withOptionalGAPageTracking } from './utils/trackRoute';
 import HomePage from '@/pages/total';
 import WorkoutsPage from '@/pages/workouts';
 import RunningLifePage from '@/pages/running-life';
+import RoutesPage from '@/pages/routes';
+import HeatmapPage from '@/pages/heatmap';
+import EventsPage from '@/pages/events';
 
 if (USE_GOOGLE_ANALYTICS) {
   ReactGA.initialize(GOOGLE_ANALYTICS_TRACKING_ID);
@@ -34,8 +37,20 @@ const routes = createBrowserRouter(
       element: withOptionalGAPageTracking(<WorkoutsPage />),
     },
     {
+      path: 'routes',
+      element: withOptionalGAPageTracking(<RoutesPage />),
+    },
+    {
+      path: 'heatmap',
+      element: withOptionalGAPageTracking(<HeatmapPage />),
+    },
+    {
       path: 'running-life',
       element: withOptionalGAPageTracking(<RunningLifePage />),
+    },
+    {
+      path: 'events',
+      element: withOptionalGAPageTracking(<EventsPage />),
     },
     {
       path: '*',

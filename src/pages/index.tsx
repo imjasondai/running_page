@@ -28,7 +28,7 @@ import {
 import { useTheme, useThemeChangeCounter } from '@/hooks/useTheme';
 
 const Index = () => {
-  const { siteTitle, siteUrl } = useSiteMetadata();
+  const { siteUrl } = useSiteMetadata();
   const { activities, thisYear } = useActivities();
   const themeChangeCounter = useThemeChangeCounter();
   const [year, setYear] = useState('Total');
@@ -393,10 +393,26 @@ const Index = () => {
       <Helmet>
         <html lang="en" data-theme={theme} />
       </Helmet>
-      <div className="w-full lg:w-1/3">
-        <h1 className="my-12 mt-6 text-6xl font-extrabold italic">
-          <a href={siteUrl}>{siteTitle}</a>
-        </h1>
+      <div className="w-full lg:w-[30%]">
+        <div className="border-white/8 mb-10 rounded-[28px] border bg-[#0d0d0f] px-7 py-8 text-white shadow-2xl shadow-black/25">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-zinc-500">
+            HOME
+          </p>
+          <h1 className="mt-3 text-[3.35rem] font-black uppercase tracking-[-0.08em] text-white">
+            RUN
+            <span className="text-red-600">.LOG</span>
+          </h1>
+          <p className="mt-3 max-w-md text-sm leading-7 text-zinc-400">
+            Personal running archive, route map, and yearly summaries powered by
+            Strava.
+          </p>
+          <a
+            href={siteUrl}
+            className="mt-5 inline-flex text-sm font-medium text-zinc-300 transition-colors hover:text-white"
+          >
+            run.dvorakd.com
+          </a>
+        </div>
         {(viewState.zoom ?? 0) <= 3 && IS_CHINESE ? (
           <LocationStat
             changeYear={changeYear}
@@ -407,7 +423,7 @@ const Index = () => {
           <YearsStat year={year} onClick={changeYear} />
         )}
       </div>
-      <div className="w-full lg:w-2/3" id="map-container">
+      <div className="w-full lg:w-[70%]" id="map-container">
         <RunMap
           title={title}
           viewState={viewState}
