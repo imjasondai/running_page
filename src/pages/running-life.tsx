@@ -1,4 +1,4 @@
-import { type MouseEvent, useMemo, useState } from 'react';
+import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import useActivities from '@/hooks/useActivities';
 
@@ -131,6 +131,8 @@ const RunningLifePage = () => {
   const { activities } = useActivities();
   const [selectedMonth, setSelectedMonth] = useState<MonthDetail | null>(null);
   const [modalOrigin, setModalOrigin] = useState<ModalOrigin | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
+  const closeTimeoutRef = useRef<number | null>(null);
 
   const firstRunMonth = useMemo(() => {
     if (activities.length === 0) {
@@ -225,6 +227,31 @@ const RunningLifePage = () => {
     return result;
   }, [currentMonth, firstRunMonth, lifeStartMonth, monthlyStats]);
 
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        window.clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const closeModal = () => {
+    if (!selectedMonth || isClosing) {
+      return;
+    }
+
+    setIsClosing(true);
+    if (closeTimeoutRef.current) {
+      window.clearTimeout(closeTimeoutRef.current);
+    }
+    closeTimeoutRef.current = window.setTimeout(() => {
+      setSelectedMonth(null);
+      setModalOrigin(null);
+      setIsClosing(false);
+      closeTimeoutRef.current = null;
+    }, 220);
+  };
+
   const handleMonthClick = (
     month: LifeMonth,
     target: HTMLButtonElement | null
@@ -241,6 +268,11 @@ const RunningLifePage = () => {
       });
     }
 
+    if (closeTimeoutRef.current) {
+      window.clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setIsClosing(false);
     const secondsPerKm = stat.durationSeconds / stat.distanceKm;
     setSelectedMonth({
       year: month.year,
@@ -307,14 +339,30 @@ const RunningLifePage = () => {
               opacity: 1;
             }
           }
+
+          @keyframes runningLifeModalOut {
+            from {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+            to {
+              opacity: 0;
+              transform: translateY(8px) scale(0.92);
+            }
+          }
+
+          @keyframes runningLifeOverlayOut {
+            from {
+              opacity: 1;
+            }
+            to {
+              opacity: 0;
+            }
+          }
         `}</style>
       </Helmet>
 
-      <div
-        className={`min-h-screen bg-zinc-950 px-4 py-10 text-white transition-[filter,opacity,transform] duration-300 ease-out md:px-8 md:py-14 ${
-          selectedMonth ? 'saturate-75 scale-[0.992] brightness-[0.7]' : ''
-        }`}
-      >
+      <div className="min-h-screen bg-zinc-950 px-4 py-10 text-white md:px-8 md:py-14">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
           <div className="w-full overflow-x-auto pb-6">
             <div
@@ -420,19 +468,18 @@ const RunningLifePage = () => {
           <div
             className="bg-black/14 fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-[7px]"
             style={{
-              animation:
-                'runningLifeOverlayIn 0.2s cubic-bezier(0.22,1,0.36,1) forwards',
+              animation: isClosing
+                ? 'runningLifeOverlayOut 0.2s ease-in forwards'
+                : 'runningLifeOverlayIn 0.2s cubic-bezier(0.22,1,0.36,1) forwards',
             }}
-            onClick={() => {
-              setSelectedMonth(null);
-              setModalOrigin(null);
-            }}
+            onClick={closeModal}
           >
             <div
               className="border-white/8 relative w-full max-w-[420px] overflow-hidden rounded-[28px] border bg-[#1a1a1d] p-6 shadow-2xl shadow-black/60"
               style={{
-                animation:
-                  'runningLifeModalIn 0.34s cubic-bezier(0.16,1,0.3,1) forwards',
+                animation: isClosing
+                  ? 'runningLifeModalOut 0.22s ease-in forwards'
+                  : 'runningLifeModalIn 0.34s cubic-bezier(0.16,1,0.3,1) forwards',
                 transformOrigin: modalOrigin
                   ? `${modalOrigin.xPercent}% ${modalOrigin.yPercent}%`
                   : '50% 50%',
@@ -442,10 +489,7 @@ const RunningLifePage = () => {
               <div className="pointer-events-none absolute right-[-54px] top-[-82px] h-52 w-52 rounded-full bg-white/[0.03]" />
               <button
                 type="button"
-                onClick={() => {
-                  setSelectedMonth(null);
-                  setModalOrigin(null);
-                }}
+                onClick={closeModal}
                 className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.04] text-zinc-400 transition-colors hover:bg-white/[0.08] hover:text-white"
                 aria-label="Close monthly summary"
               >
