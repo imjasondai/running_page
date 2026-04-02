@@ -26,6 +26,11 @@ type ModalOrigin = {
   yPercent: number;
 };
 
+type ModalPosition = {
+  left: number;
+  top: number;
+};
+
 const BIRTH_DATE = new Date(1989, 0, 13);
 const GRID_COLS = 24;
 const GRID_ROWS = 43;
@@ -131,6 +136,9 @@ const RunningLifePage = () => {
   const { activities } = useActivities();
   const [selectedMonth, setSelectedMonth] = useState<MonthDetail | null>(null);
   const [modalOrigin, setModalOrigin] = useState<ModalOrigin | null>(null);
+  const [modalPosition, setModalPosition] = useState<ModalPosition | null>(
+    null
+  );
   const [isClosing, setIsClosing] = useState(false);
   const closeTimeoutRef = useRef<number | null>(null);
 
@@ -247,6 +255,7 @@ const RunningLifePage = () => {
     closeTimeoutRef.current = window.setTimeout(() => {
       setSelectedMonth(null);
       setModalOrigin(null);
+      setModalPosition(null);
       setIsClosing(false);
       closeTimeoutRef.current = null;
     }, 220);
@@ -265,6 +274,10 @@ const RunningLifePage = () => {
       setModalOrigin({
         xPercent: ((rect.left + rect.width / 2) / window.innerWidth) * 100,
         yPercent: ((rect.top + rect.height / 2) / window.innerHeight) * 100,
+      });
+      setModalPosition({
+        left: rect.left + rect.width / 2,
+        top: rect.top + rect.height / 2,
       });
     }
 
@@ -357,6 +370,28 @@ const RunningLifePage = () => {
             }
             to {
               opacity: 0;
+            }
+          }
+
+          @keyframes runningLifeBlurPulseIn {
+            from {
+              opacity: 0;
+              transform: translate(-50%, -50%) scale(0.72);
+            }
+            to {
+              opacity: 1;
+              transform: translate(-50%, -50%) scale(1);
+            }
+          }
+
+          @keyframes runningLifeBlurPulseOut {
+            from {
+              opacity: 1;
+              transform: translate(-50%, -50%) scale(1);
+            }
+            to {
+              opacity: 0;
+              transform: translate(-50%, -50%) scale(0.9);
             }
           }
         `}</style>
@@ -466,7 +501,7 @@ const RunningLifePage = () => {
 
         {selectedMonth ? (
           <div
-            className="bg-black/14 fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-[7px]"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 p-4"
             style={{
               animation: isClosing
                 ? 'runningLifeOverlayOut 0.2s ease-in forwards'
@@ -474,6 +509,18 @@ const RunningLifePage = () => {
             }}
             onClick={closeModal}
           >
+            {modalPosition ? (
+              <div
+                className="bg-black/18 pointer-events-none absolute h-[360px] w-[460px] rounded-[40px] backdrop-blur-[10px]"
+                style={{
+                  left: `${modalPosition.left}px`,
+                  top: `${modalPosition.top}px`,
+                  animation: isClosing
+                    ? 'runningLifeBlurPulseOut 0.22s ease-in forwards'
+                    : 'runningLifeBlurPulseIn 0.28s cubic-bezier(0.16,1,0.3,1) forwards',
+                }}
+              />
+            ) : null}
             <div
               className="border-white/8 relative w-full max-w-[420px] overflow-hidden rounded-[28px] border bg-[#1a1a1d] p-6 shadow-2xl shadow-black/60"
               style={{
